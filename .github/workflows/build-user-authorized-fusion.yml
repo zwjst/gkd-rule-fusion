@@ -1,8 +1,7 @@
 name: Build user-authorized fusion subscription
 on:
   workflow_dispatch:
-  push:
-    branches: [feature/multi-source-candidate-analysis]
+  pull_request:
     paths:
       - 'scripts/build-user-authorized-fusion.mjs'
       - '.github/workflows/build-user-authorized-fusion.yml'
