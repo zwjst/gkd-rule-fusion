@@ -27,6 +27,9 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm test
       - run: node scripts/prepare-staging.mjs
+      - name: Install isolated selector validator dependencies
+        working-directory: tools/selector-validation
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Validate preview subscription
         run: node tools/selector-validation/check-export.mjs --file reports/staging/gkd-preview.json5 --out reports/staging/validation.json
       - uses: actions/upload-artifact@v4
