@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "Lin-arm",
+      "repository": "Lin-arm/GKD_subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "license": "NOASSERTION"
+    },
+    {
+      "id": "Tsuk1ko",
+      "repository": "Tsuk1ko/gkd-subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "license": "NOASSERTION"
+    },
+    {
+      "id": "Antiwall",
+      "repository": "Antiwall/gkd-subs",
+      "ref": "main",
+      "file": "dist/gkd_subs.json5",
+      "license": "NOASSERTION"
+    },
+    {
+      "id": "AIsouler",
+      "repository": "AIsouler/GKD_subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "license": "UNVERIFIED"
+    },
+    {
+      "id": "lyc452",
+      "repository": "lyc452/GKD_Subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "license": "UNVERIFIED"
+    },
+    {
+      "id": "Adpro-Team",
+      "repository": "Adpro-Team/GKD_subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "license": "UNVERIFIED"
+    }
+  ]
+}
