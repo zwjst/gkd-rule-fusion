@@ -1,0 +1,50 @@
+name: Build user-authorized fusion subscription
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/multi-source-candidate-analysis]
+    paths:
+      - 'scripts/build-user-authorized-fusion.mjs'
+      - '.github/workflows/build-user-authorized-fusion.yml'
+      - 'config/candidate-sources.json'
+      - 'config/release-policy.json'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: node scripts/build-user-authorized-fusion.mjs
+      - name: Install selector validator
+        working-directory: tools/selector-validation
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate new fused subscription
+        run: node tools/selector-validation/check-export.mjs --file dist/gkd-fused.json5 --out dist/gkd-fused-validation.json
+      - name: Publish fusion files on PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/gkd-fused.json5 dist/gkd-fused-manifest.json dist/gkd-fused-validation.json
+          if ! git diff --cached --quiet; then
+            git commit -m "build: publish validated owner-authorized fusion candidate"
+            git push origin HEAD:feature/multi-source-candidate-analysis
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: owner-authorized-fusion
+          path: |
+            dist/gkd-fused.json5
+            dist/gkd-fused-manifest.json
+            dist/gkd-fused-validation.json
+          if-no-files-found: ignore
