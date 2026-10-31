@@ -1,0 +1,34 @@
+name: Subscription artifact and delivery checks
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dist/**'
+      - 'scripts/check-subscription.mjs'
+      - 'scripts/check-public-subscription.mjs'
+      - '.github/workflows/subscription-delivery.yml'
+  pull_request:
+    paths:
+      - 'dist/**'
+      - 'scripts/check-subscription.mjs'
+      - 'scripts/check-public-subscription.mjs'
+      - '.github/workflows/subscription-delivery.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '13 4 * * *'
+permissions:
+  contents: read
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: node scripts/check-subscription.mjs
+      - name: Check public Raw URL (main only)
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: node scripts/check-public-subscription.mjs
