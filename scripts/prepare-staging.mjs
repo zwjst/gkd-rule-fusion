@@ -29,7 +29,12 @@ const suspicious=/开屏|广告|弹窗|跳过|关闭|跳过广告|splash|ad.?ski
 for(const src of sources){
   const row={source:src.id,repository:src.repository,declaredLicense:src.license,publicationApproved:false,status:'pending',apps:0,groups:0,review:0,blocked:0,dependencyIssues:0,riskySelectors:0};
   try{
-    const url='https://raw.githubusercontent.com/'+src.repository+'/'+src.ref+'/'+src.file;
+    const commitResponse=await fetch('https://api.github.com/repos/'+src.repository+'/commits/'+encodeURIComponent(src.ref),{headers:{Accept:'application/vnd.github+json','User-Agent':'gkd-rule-fusion-audit'},signal:AbortSignal.timeout(20000)});
+    if(!commitResponse.ok)throw Error('Unable to pin upstream commit: HTTP '+commitResponse.status);
+    const commitData=await commitResponse.json();
+    if(!/^[a-f0-9]{40}$/.test(commitData.sha??''))throw Error('Invalid upstream commit SHA');
+    row.commit=commitData.sha;
+    const url='https://raw.githubusercontent.com/'+src.repository+'/'+row.commit+'/'+src.file;
     const res=await fetch(url,{signal:AbortSignal.timeout(45000)});
     if(!res.ok)throw Error('HTTP '+res.status);
     const body=await res.text();if(body.length>30_000_000)throw Error('source too large');
@@ -97,7 +102,8 @@ const upstreamLinks=(sourceIds,appId)=>sourceIds.map(id=>{
  const source=candidateSourceLookup.get(id);
  if(!source)return {source:id,url:null};
  const file=source.file.split('/').map(encodeURIComponent).join('/');
- return {source:id,url:'https://github.com/'+source.repository+'/blob/'+encodeURIComponent(source.ref)+'/'+file,appId};
+ const pinned=report.sources.find(s=>s.source===id)?.commit;
+ return {source:id,commit:pinned??null,url:pinned?'https://github.com/'+source.repository+'/blob/'+pinned+'/'+file:null,appId};
 });
 const reviewPriority=report.deduplicatedReview.filter(x=>!x.alreadyInBaseline).map(x=>({
   appId:x.appId,appName:x.appName,signature:x.signature,
