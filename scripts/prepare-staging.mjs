@@ -8,10 +8,13 @@ const read = p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const sources=read('config/candidate-sources.json').sources;
 const current=JSON5.parse(fs.readFileSync('dist/gkd.json5','utf8'));
 const known=new Map(current.apps.map(a=>[a.id,a]));
-const report={schemaVersion:1,baseline:{id:current.id,version:current.version,apps:current.apps.length},sources:[],reviewQueue:[],preview:{status:'baseline-only',containsUnapprovedRules:false}};
+const report={schemaVersion:2,baseline:{id:current.id,version:current.version,apps:current.apps.length},sources:[],reviewQueue:[],preview:{status:'baseline-only',containsUnapprovedRules:false}};
 const list=v=>v===undefined?[]:Array.isArray(v)?v:[v];
 const text=v=>typeof v==='string'?v:JSON.stringify(v);
 const broad=/(@TextView|@ImageView|\btext\s*==\s*['"]?[xX×✕关闭]|text\s*\*=\s*['"]?[xX×]|clickable\s*==\s*true)/i;
+const fingerprint=v=>crypto.createHash('sha256').update(JSON.stringify(v,(_k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b))):x)).digest('hex');
+const signature=g=>fingerprint(list(g.rules).map(r=>typeof r==='string'?{matches:r}:r));
+const baselineSignatures=new Map(current.apps.map(a=>[a.id,new Set((a.groups??[]).map(signature))]));
 const suspicious=/开屏|广告|弹窗|跳过|关闭|跳过广告|splash|ad.?skip|popup/i;
 for(const src of sources){
   const row={source:src.id,repository:src.repository,declaredLicense:src.license,publicationApproved:false,status:'pending',apps:0,groups:0,review:0,blocked:0,dependencyIssues:0,riskySelectors:0};
@@ -32,7 +35,7 @@ for(const src of sources){
         const risk=[...(issues.length?['dependency']:[]),...(risky?['generic-selector']:[]),...(selectors.length===0?['no-rule-selector']:[])];
         row.dependencyIssues+=issues.length;row.riskySelectors+=Number(risky);
         if(!relevant)continue;
-        const record={source:src.id,appId:app.id,appName:app.name??app.id,groupKey:group.key,groupName:group.name??'',inBaseline:known.has(app.id),risk,issues,publication:'blocked-unverified-license'};
+        const record={source:src.id,signature:signature(group),alreadyInBaseline:baselineSignatures.get(app.id)?.has(signature(group))??false,appId:app.id,appName:app.name??app.id,groupKey:group.key,groupName:group.name??'',inBaseline:known.has(app.id),risk,issues,publication:'blocked-unverified-license'};
         report.reviewQueue.push(record);row.review++;
         row.blocked++;
       }
@@ -41,11 +44,34 @@ for(const src of sources){
   }catch(e){row.status='error';row.error=String(e.message??e)}
   report.sources.push(row);
 }
+const merged=new Map();
+for(const item of report.reviewQueue){
+  const id=item.appId+'|'+item.signature;
+  if(!merged.has(id))merged.set(id,{appId:item.appId,appName:item.appName,signature:item.signature,inBaseline:item.inBaseline,alreadyInBaseline:item.alreadyInBaseline,sources:[],risk:[],issues:[],publication:'blocked-unverified-license'});
+  const entry=merged.get(id);
+  entry.sources.push({source:item.source,groupKey:item.groupKey,groupName:item.groupName});
+  entry.risk=[...new Set([...entry.risk,...item.risk])].sort();
+  entry.issues.push(...item.issues.map(issue=>({...issue,source:item.source})));
+}
+report.deduplicatedReview=[...merged.values()].sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
+report.summary={
+  rawCandidates:report.reviewQueue.length,
+  uniqueCandidates:report.deduplicatedReview.length,
+  duplicateOccurrences:report.reviewQueue.length-report.deduplicatedReview.length,
+  alreadyInBaseline:report.deduplicatedReview.filter(x=>x.alreadyInBaseline).length,
+  newApplicationCandidates:report.deduplicatedReview.filter(x=>!x.inBaseline).length,
+  dependencyRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('dependency')).length,
+  genericSelectorRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('generic-selector')).length,
+  cleanStaticCandidates:report.deduplicatedReview.filter(x=>!x.risk.length&&!x.alreadyInBaseline).length,
+  publishableCandidates:0
+};
 report.reviewQueue.sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
 fs.mkdirSync('reports/staging',{recursive:true});
+fs.writeFileSync('reports/staging/deduplicated-review.json',JSON.stringify({summary:report.summary,candidates:report.deduplicatedReview},null,2)+'\n');
 fs.writeFileSync('reports/staging/review.json',JSON.stringify(report,null,2)+'\n');
 const md=['# GKD staging review','','**No unapproved third-party rules are redistributed.**','','| Source | Status | Apps | Groups | Ad/popup candidates | Dependency findings | Generic selector groups | License |','|---|---|---:|---:|---:|---:|---:|---|'];
 for(const r of report.sources)md.push('| '+[r.source,r.status,r.apps,r.groups,r.review,r.dependencyIssues,r.riskySelectors,r.declaredLicense].join(' | ')+' |');
+md.push('','## Deduplicated review','','| Metric | Count |','|---|---:|',...Object.entries(report.summary).map(([k,v])=>'| '+k+' | '+v+' |'));
 md.push('','Candidates are heuristic, not proof of correct functionality. Group dependencies are checked within the same app; cross-group behavior and runtime safety need manual review.','', '## Test subscription','The preview is a copy of the existing approved baseline, not a six-source fusion. Its name and version are unchanged to avoid implying a new release.','');
 fs.writeFileSync('reports/staging/README.md',md.join('\n'));
 fs.writeFileSync('reports/staging/gkd-preview.json5',JSON.stringify(current,null,2)+'\n');
