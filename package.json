@@ -13,7 +13,8 @@
     "plan": "node src/cli.js plan",
     "catalog": "node src/cli.js catalog",
     "build:catalog": "node scripts/build-catalog.js",
-    "build:fusion": "node scripts/build-fusion.js"
+    "build:fusion": "node scripts/build-fusion.js",
+    "audit:ad-close": "node scripts/audit-ad-close.mjs"
   },
   "dependencies": {
     "json5": "2.2.3"
