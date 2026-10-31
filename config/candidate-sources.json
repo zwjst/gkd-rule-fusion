@@ -26,7 +26,7 @@
       "id": "AIsouler",
       "repository": "AIsouler/GKD_subscription",
       "ref": "main",
-      "file": "dist/gkd.json5",
+      "file": "dist/AIsouler_gkd.json5",
       "license": "UNVERIFIED"
     },
     {
@@ -40,7 +40,7 @@
       "id": "Adpro-Team",
       "repository": "Adpro-Team/GKD_subscription",
       "ref": "main",
-      "file": "dist/gkd.json5",
+      "file": "dist/Adpro_gkd.json5",
       "license": "UNVERIFIED"
     }
   ]
