@@ -23,6 +23,8 @@ Optional `config/device-test-evidence.json`:
       "signature": "64-char-hex-sha256",
       "appVersion": "tested-version",
       "gkdVersion": "tested-client-version",
+      "sourceCommit": "40-char-reviewed-upstream-commit",
+      "sourceFileSha256": "64-char-reviewed-upstream-content-hash",
       "positivePass": true,
       "negativePass": true,
       "evidenceUrl": "https://example.org/real-test-evidence"
@@ -34,3 +36,5 @@ Only enter truthful observed results. The gate checks completeness, not authenti
 
 ## Current decision
 No six-source candidate rules may be published until redistribution permissions, rule-level review, Android tests, and final human approval are complete. Existing approved baseline remains available unchanged.
+
+Source approvals in `config/staging-approvals.json` must also include the exact reviewed `commit` (40 hexadecimal characters) and `sha256` (64 hexadecimal characters). Any upstream update requires renewed review. Device evidence must refer to the same pinned content.
