@@ -2,6 +2,7 @@
 // Evidence-based publication gate and overall staging validation report.
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import {assessRelease} from '../src/release-readiness.js';
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const review=read('reports/staging/review.json');
 const validation=read('reports/staging/validation.json');
@@ -20,8 +21,10 @@ const findings={
   cleanStaticCandidates:review.summary.cleanStaticCandidates,
   publishableCandidates:review.summary.publishableCandidates,
 };
-const report={schemaVersion:1,publicationDecision:'BLOCK_NEW_CANDIDATE_MERGE',reason:'No approved candidate sources or fully authorized and runtime-tested additions',baselinePreview:{sha256:digest,bytes:preview.length,source:'existing approved dist/gkd.json5'},findings,sources,selectorValidation:validation,licenseEvidencePresent:Boolean(licenses),runtimeTestedNewCandidates:0};
+const deviceEvidence=fs.existsSync('config/device-test-evidence.json')?read('config/device-test-evidence.json').tests??[]:[];
+const readiness=assessRelease({sources:review.sources,approvals,summary:review.summary,validation,deviceEvidence});
+const report={schemaVersion:2,publicationDecision:readiness.ready?'READY_FOR_FINAL_HUMAN_REVIEW':'BLOCK_NEW_CANDIDATE_MERGE',readiness,reason:readiness.blockers.join(', ')||'All automated gates passed; final human review required',baselinePreview:{sha256:digest,bytes:preview.length,source:'existing approved dist/gkd.json5'},findings,sources,selectorValidation:validation,licenseEvidencePresent:Boolean(licenses),runtimeTestedNewCandidates:0};
 fs.writeFileSync('reports/staging/overall-validation.json',JSON.stringify(report,null,2)+'\n');
-const md=['# Overall subscription validation report','','**Publication decision: BLOCK NEW CANDIDATE MERGE**','','The preview remains the existing authorized baseline; it is not a newly fused subscription.','','## Counts','','| Metric | Value |','|---|---:|',...Object.entries(findings).map(([k,v])=>'| '+k+' | '+(Array.isArray(v)?v.length:v)+' |'),'','## Upstream provenance','','| Source | Commit | Content SHA256 | Approved |','|---|---|---|---|',...sources.map(s=>'| '+s.id+' | '+(s.commit??'unavailable')+' | '+(s.sha256??'unavailable')+' | '+(s.redistributionApproved?'yes':'no')+' |'),'','## Preview integrity','','SHA256: `'+digest+'`','','Selector validation result: see validation.json.','','**Limitations:** Static checks cannot establish device safety. Upstream source licenses, provenance and real-device behavior must be reviewed before redistribution.'];
+const md=['# Overall subscription validation report','','**Publication decision: '+report.publicationDecision+'**','','The preview remains the existing authorized baseline; it is not a newly fused subscription.','','## Release blockers','',...(readiness.blockers.length?readiness.blockers.map(b=>'- '+b):['- No automated blockers; final human review remains required']),'','## Counts','','| Metric | Value |','|---|---:|',...Object.entries(findings).map(([k,v])=>'| '+k+' | '+(Array.isArray(v)?v.length:v)+' |'),'','## Upstream provenance','','| Source | Commit | Content SHA256 | Approved |','|---|---|---|---|',...sources.map(s=>'| '+s.id+' | '+(s.commit??'unavailable')+' | '+(s.sha256??'unavailable')+' | '+(s.redistributionApproved?'yes':'no')+' |'),'','## Preview integrity','','SHA256: `'+digest+'`','','Selector validation result: see validation.json.','','**Limitations:** Static checks cannot establish device safety. Upstream source licenses, provenance and real-device behavior must be reviewed before redistribution.'];
 fs.writeFileSync('reports/staging/overall-validation.md',md.join('\n')+'\n');
 console.log(md.join('\n'));
