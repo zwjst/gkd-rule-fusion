@@ -77,6 +77,22 @@ report.summary={
 };
 report.reviewQueue.sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
 fs.mkdirSync('reports/staging',{recursive:true});
+// A focused manual-review queue: licensing first, then runtime checks; never publish automatically.
+const reviewPriority=report.deduplicatedReview.filter(x=>!x.alreadyInBaseline).map(x=>({
+  appId:x.appId,appName:x.appName,signature:x.signature,
+  sources:x.sources.map(s=>s.source),groupNames:[...new Set(x.sources.map(s=>s.groupName))],
+  reviewStatus:x.reviewStatus,risk:x.risk,
+  priority:x.risk.includes('dependency')?'P0-dependency':
+    x.risk.includes('generic-selector')?'P1-false-positive':
+    x.risk.includes('no-rule-selector')?'P1-missing-selector':
+    x.sources.length>1?'P2-cross-source-verification':'P3-manual-verification'
+})).sort((a,b)=>a.priority.localeCompare(b.priority)||b.sources.length-a.sources.length||a.appId.localeCompare(b.appId));
+fs.writeFileSync('reports/staging/manual-review-queue.json',JSON.stringify(reviewPriority,null,2)+'\\n');
+const reviewMd=['# Manual review priorities','','All entries remain blocked until license evidence and device testing are approved.','','| Priority | Count |','|---|---:|'];
+for(const p of [...new Set(reviewPriority.map(x=>x.priority))])reviewMd.push('| '+p+' | '+reviewPriority.filter(x=>x.priority===p).length+' |');
+reviewMd.push('','## First 30 candidates','','| Priority | Application | Group | Sources | Risks |','|---|---|---|---|---|');
+for(const x of reviewPriority.slice(0,30))reviewMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,70),x.sources.join(', '),x.risk.join(', ')||'none'].join(' | ')+' |');
+fs.writeFileSync('reports/staging/manual-review-queue.md',reviewMd.join('\\n')+'\\n');
 const buckets={};
 for(const entry of report.deduplicatedReview)(buckets[entry.reviewStatus]??=[]).push(entry);
 for(const [status,entries] of Object.entries(buckets))fs.writeFileSync('reports/staging/'+status+'.json',JSON.stringify(entries,null,2)+'\n');
