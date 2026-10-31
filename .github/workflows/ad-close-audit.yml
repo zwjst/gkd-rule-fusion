@@ -1,0 +1,38 @@
+name: Balanced ad-close audit
+on:
+  pull_request:
+    paths:
+      - 'config/ad-close-candidates.json'
+      - 'scripts/audit-ad-close.mjs'
+      - 'package.json'
+      - '.github/workflows/ad-close-audit.yml'
+  push:
+    branches:
+      - 'feature/balanced-ad-close-audit'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Existing project tests
+        run: npm test
+      - name: Audit existing selector overlap
+        run: npm run audit:ad-close > ad-close-report.json
+      - name: Validate audit output
+        run: |
+          node --input-type=module -e "import fs from 'node:fs';const r=JSON.parse(fs.readFileSync('ad-close-report.json'));if(r.candidateGroups.length!==3 || r.subscription.globalGroups!==9)process.exit(1);console.log('Candidate groups:',r.candidateGroups.length,'Global groups:',r.subscription.globalGroups)"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ad-close-audit-report
+          path: ad-close-report.json
+          if-no-files-found: ignore
