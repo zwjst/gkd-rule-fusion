@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "skipDeviceTests": true,
+  "deviceTestingStatus": "SKIPPED_UNVERIFIED",
+  "requireRedistributionPermission": true,
+  "requireStaticValidation": true
+}
