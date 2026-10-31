@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "mode": "balanced",
+  "publication": "review-required",
+  "description": "Candidate selectors only; never publish without a positive and negative snapshot and device validation.",
+  "candidates": [
+    {
+      "id": "ad-close-vid",
+      "selectors": [
+        "[vid=\"ad_close\"]",
+        "[vid=\"close_ad\"]",
+        "[vid=\"splash_close\"]",
+        "[vid=\"iv_ad_close\"]"
+      ],
+      "context": "Require ad-related container or confirmed activity",
+      "risk": "medium"
+    },
+    {
+      "id": "explicit-ad-text",
+      "selectors": [
+        "[text=\"关闭广告\"]",
+        "[text=\"关闭此广告\"]",
+        "[desc=\"关闭广告\"]",
+        "[text=\"跳过广告\"]"
+      ],
+      "context": "Require visible advertising screen and negative control",
+      "risk": "medium"
+    },
+    {
+      "id": "generic-x",
+      "selectors": [
+        "[text=\"×\"]",
+        "[text=\"✕\"]",
+        "[text=\"X\"]",
+        "[desc=\"关闭\"]"
+      ],
+      "context": "NEVER enable globally; app-specific positive/negative snapshot evidence required",
+      "risk": "high"
+    }
+  ]
+}
