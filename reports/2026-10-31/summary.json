@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "inputFingerprint": "1eaf1819090f6eb36d6a0b592d5f8570ccbd1c183c4e5f8ba0312672d5dbd4c6",
+  "inputFingerprint": "4964c3597b65470fe93e4e4846d52a1f5f20b7cdef83de8ce0ee1718332f10a4",
   "unionApps": 1053,
   "summary": [
     {
@@ -10,7 +10,7 @@
       "committedAt": "2026-09-26T08:58:38Z",
       "version": 89,
       "license": "GPL-3.0-only",
-      "publicationApproved": false,
+      "publicationApproved": true,
       "apps": 72,
       "exclusiveApps": [],
       "appGroups": 280,
@@ -31,7 +31,7 @@
       "committedAt": "2026-09-24T07:52:01Z",
       "version": 72,
       "license": "MIT",
-      "publicationApproved": false,
+      "publicationApproved": true,
       "apps": 610,
       "exclusiveApps": [
         "cn.com.cmbc.newmbank",
@@ -823,7 +823,7 @@
       }
     }
   ],
-  "reportSha256": "ab23a3f7afbb1930b2648aa5b44d5c1bd227807d0f6e18e643f23d44fd1a6122",
+  "reportSha256": "1105b62c66f140505c6173be570af3e32dd25603835261be5fbe7fd4c31e4c5b",
   "plan": {
     "proposed": 2423,
     "pending": 1867,
@@ -831,7 +831,7 @@
     "multiSourceApps": 325,
     "publicationReady": false
   },
-  "planSha256": "9f9b0440d810519fd94636a321528cd475de611ff11780ca2a348019fa9b31dd",
+  "planSha256": "3fdbbaf5d6eee34fe2ce3be02f001c763eafa0b3981e989a28040fa31539c629",
   "inventory": {
     "appEntriesUnion": 1053,
     "appsWithExplicitSelectors": 1051,
@@ -841,7 +841,7 @@
     "selectorBearingRuleRecords": 6784,
     "groupsWithExplicitSelectors": 4286,
     "initialEnabledGroupRecords": 311,
-    "exportedSubscriptions": 0,
+    "exportedSubscriptions": 1,
     "deviceVerifiedRules": 0
   }
 }

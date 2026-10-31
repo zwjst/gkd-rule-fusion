@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": 20261031,
+  "version": 1,
+  "name": "GKD Rule Fusion · 融合实验版",
+  "author": "zwjst",
+  "repository": "https://github.com/zwjst/gkd-rule-fusion",
+  "channel": "experimental",
+  "modifiedAt": "2026-10-31",
+  "sourcePriority": ["aoguai", "ganlinte"],
+  "globalSource": "aoguai",
+  "reviewedCommits": {
+    "aoguai": "e0ad57290fed632e7305f67f92fcca8e775fb825",
+    "ganlinte": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811"
+  }
+}

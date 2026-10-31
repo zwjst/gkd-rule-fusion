@@ -106,7 +106,15 @@ try {
       summary.planSha256 = hash(fs.readFileSync(path.join(out, 'fusion-plan.json')));
       console.log(`Plan: ${result.selected.length} proposed, ${result.pending.length} pending; publicationReady=false`);
       if (command === 'catalog') {
-        const catalog = createCatalog(loaded, report, result, read(new URL('../package.json', import.meta.url)).version);
+        let fusionRelease = null;
+        const releaseDir = new URL('../dist/', import.meta.url);
+        if (fs.existsSync(new URL('manifest.json', releaseDir)) && fs.existsSync(new URL('gkd.json5', releaseDir))) {
+          const m = read(new URL('manifest.json', releaseDir));
+          if (m.inputFingerprint === hash(lock) && m.subscriptionSha256 === hash(fs.readFileSync(new URL('gkd.json5', releaseDir)))) {
+            fusionRelease = { id: m.id, version: m.version, channel: m.channel, counts: m.counts, url: m.subscriptionUrl };
+          }
+        }
+        const catalog = createCatalog(loaded, report, result, read(new URL('../package.json', import.meta.url)).version, fusionRelease);
         write(path.join(out, 'catalog.json'), catalog);
         write(path.join(out, 'apps.csv'), appCsv(catalog));
         write(path.join(out, 'rule-groups.csv'), groupCsv(catalog));

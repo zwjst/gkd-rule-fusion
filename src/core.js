@@ -262,7 +262,7 @@ export function plan(report, policy) {
   return { schemaVersion: 1, artifact: 'review-plan-not-a-GKD-subscription',
     publicationReady: false, selected, rejected, pending, multiSourceApps,
     licenseBlockedSources: report.summary.filter(s => !s.publicationApproved).map(s => s.source),
-    limitations: ['No subscription exporter in phase 1; selection is a proposal.',
+    limitations: ['This four-source review plan is a proposal, not the separately configured fusion release; see dist/manifest.json and dist/validation.json for that release.',
       'Cross-group references, category defaults, global overlap and key allocation need export-stage validation.'] };
 }
 
@@ -278,6 +278,6 @@ export function markdown(report) {
   for (const p of report.overlaps) lines.push(`| ${p.sources.join(' / ')} | ${p.commonApps} | ${p.onlyFirst} | ${p.onlySecond} |`);
   lines.push('', '完整规则身份、提交、文件摘要、JSON Pointer、差异候选和质量指示项见 audit.json。', '',
     '## 口径与边界', '', ...report.limitations.map(s => `- ${s}`), '',
-    '所有来源默认尚未获准自动发布。报告只含元数据、摘要和定位信息，不包含上游选择器正文。', '');
+    '来源许可状态见摘要。本四源研究报告不是可导入的订阅；实际融合范围以 dist/manifest.json 为准。报告只含元数据、摘要和定位信息，不包含上游选择器正文。', '');
   return lines.join('\n');
 }

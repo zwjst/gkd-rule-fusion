@@ -1,0 +1,88 @@
+[
+  {
+    "id": "ganlinte:com.kuangxiangciweimao.novel:5",
+    "source": "ganlinte",
+    "appId": "com.kuangxiangciweimao.novel",
+    "originalKey": 5,
+    "outputKey": 5,
+    "fingerprint": "e572d373fc83a637f40e3d8fee3f0ed20649da11c2b5ef15fb7295743e58b557",
+    "provenance": {
+      "repository": "ganlinte/GKD-subscription",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "path": "dist/ganlin_gkd.json5",
+      "sha256": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23",
+      "pointer": "/apps/110/groups/5"
+    },
+    "changes": [
+      "resolved-source-category-default-to-explicit-group-enable"
+    ],
+    "name": "功能类-签到",
+    "reasons": [
+      {
+        "type": "missing-actionCdKey",
+        "index": 0,
+        "key": 2
+      },
+      {
+        "type": "missing-actionCdKey",
+        "index": 1,
+        "key": 2
+      }
+    ]
+  },
+  {
+    "id": "ganlinte:com.ss.android.auto:1",
+    "source": "ganlinte",
+    "appId": "com.ss.android.auto",
+    "originalKey": 1,
+    "outputKey": 1,
+    "fingerprint": "293e91b9826c38aecc8bbfc01352c2e5306b4a93298ffd068cf0d959988f4efc",
+    "provenance": {
+      "repository": "ganlinte/GKD-subscription",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "path": "dist/ganlin_gkd.json5",
+      "sha256": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23",
+      "pointer": "/apps/128/groups/0"
+    },
+    "changes": [
+      "resolved-source-category-default-to-explicit-group-enable"
+    ],
+    "name": "全屏广告-首页推荐卡片广告",
+    "reasons": [
+      {
+        "type": "missing-preKey",
+        "index": 1,
+        "key": 1
+      },
+      {
+        "type": "missing-preKey",
+        "index": 2,
+        "key": 1
+      }
+    ]
+  },
+  {
+    "id": "ganlinte:com.youku.phone:1",
+    "source": "ganlinte",
+    "appId": "com.youku.phone",
+    "originalKey": 1,
+    "outputKey": 1,
+    "fingerprint": "c337f64af17356af9efc027b195a17546e6cfcd856f284ab7c5c4c55d785769c",
+    "provenance": {
+      "repository": "ganlinte/GKD-subscription",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "path": "dist/ganlin_gkd.json5",
+      "sha256": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23",
+      "pointer": "/apps/502/groups/0"
+    },
+    "changes": [
+      "resolved-source-category-default-to-explicit-group-enable"
+    ],
+    "name": "更新提示",
+    "reasons": [
+      {
+        "type": "empty-group"
+      }
+    ]
+  }
+]

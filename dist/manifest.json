@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "projectVersion": "0.2.0",
+  "id": 20261031,
+  "version": 1,
+  "channel": "experimental",
+  "subscriptionUrl": "https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.json5",
+  "versionUrl": "https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.version.json",
+  "license": "GPL-3.0-only",
+  "counts": {
+    "apps": 614,
+    "appGroups": 1328,
+    "globalGroups": 9,
+    "groups": 1337,
+    "rules": 2159,
+    "quarantinedGroups": 3
+  },
+  "sourceArchives": [
+    {
+      "source": "aoguai",
+      "repository": "aoguai/subscription",
+      "commit": "e0ad57290fed632e7305f67f92fcca8e775fb825",
+      "license": "GPL-3.0-only",
+      "archive": "third_party/sources/aoguai-e0ad57290fed.tar.gz",
+      "sha256": "dc9690de3463f60f3b22eb2d409c329f63569ad015ea876b0d547b943572aaaf",
+      "subscriptionPath": "dist/aoguai_gkd.json5",
+      "subscriptionSha256": "f6151dd60c671d3bd77505f62f9abd5d6694388e89277f5a5374d035cb8c5a4e"
+    },
+    {
+      "source": "ganlinte",
+      "repository": "ganlinte/GKD-subscription",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "license": "MIT",
+      "archive": "third_party/sources/ganlinte-4746d192b4c5.tar.gz",
+      "sha256": "05ed1ac52c94604f34886c40ce8706c6b29c9cd54a1d09135055798c64b22932",
+      "subscriptionPath": "dist/ganlin_gkd.json5",
+      "subscriptionSha256": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23"
+    }
+  ],
+  "inputFingerprint": "4964c3597b65470fe93e4e4846d52a1f5f20b7cdef83de8ce0ee1718332f10a4",
+  "releaseConfigSha256": "d23c0fbadc8a35d8ce1df1dac46cc2e57a489d88b8eff11e7d2e166757dbe7d9",
+  "personalPolicySha256": "cf212fd1a8d3a876293d0ad1beea57ed7c92ce61ab31cecc334920ae6f65fc0e",
+  "subscriptionSha256": "bafbf136ddbc089498e62be4c867f41c0a141d3368ab5bb8d6813b15a2395a89",
+  "validationSha256": "a57ed850c7f52c282d25d032174aefc09acf4fe1b45a02f3ca1cfce87d91f201",
+  "deviceVerified": false,
+  "releaseStatus": "experimental-not-device-verified"
+}

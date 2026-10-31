@@ -31,4 +31,4 @@
 - Group keys are scoped to source and app. No rule chains are split or renumbered.
 - Quality indicators are not a correctness or performance score.
 
-所有来源默认尚未获准自动发布。报告只含元数据、摘要和定位信息，不包含上游选择器正文。
+来源许可状态见摘要。本四源研究报告不是可导入的订阅；实际融合范围以 dist/manifest.json 为准。报告只含元数据、摘要和定位信息，不包含上游选择器正文。

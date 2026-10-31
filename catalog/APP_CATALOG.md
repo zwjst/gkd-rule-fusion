@@ -1,14 +1,16 @@
 # 软件与规则完整清单
 
-项目 v0.1.0；1053 个包名条目，1051 个至少有显式选择器。
+项目 v0.2.0；1053 个包名条目，1051 个至少有显式选择器。
 
-这是固定上游版本的规则清单，不代表融合订阅已经导出或通过手机验证。规则组/记录跨来源重复计数；同名软件以包名区分。
+这是固定上游版本的调查清单，不能直接导入 GKD。规则组/记录跨来源重复计数；同名软件以包名区分。
 
 “初始开关”假设 App 已安装且没有用户覆盖，不含选择器有效性、版本匹配、App 总开关及设备条件。全局组单列。
 
 完整规则名称、来源、约束与定位见 catalog.json / rule-groups.csv；离线筛选见 index.html。
 
 仓库公开文件下载入口：[完整清单目录](https://github.com/zwjst/gkd-rule-fusion/tree/main/catalog)。
+
+本仓库另有可导入的融合实验版，实际包含 614 个 App；[订阅与导入说明](https://github.com/zwjst/gkd-rule-fusion/blob/main/dist/README.md)。调查清单范围与实际订阅不同。
 
 ## Luka阅读养成 · ai.ling.luka.app
 

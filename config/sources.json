@@ -2,24 +2,52 @@
   "schemaVersion": 1,
   "sources": [
     {
-      "id": "aoguai", "repository": "aoguai/subscription", "ref": "custom",
-      "file": "dist/aoguai_gkd.json5", "licenseFiles": ["LICENSE", "LEGAL.md", "README.md"],
-      "license": "GPL-3.0-only", "publicationApproved": false
+      "id": "aoguai",
+      "repository": "aoguai/subscription",
+      "ref": "custom",
+      "file": "dist/aoguai_gkd.json5",
+      "licenseFiles": [
+        "LICENSE",
+        "LEGAL.md",
+        "README.md"
+      ],
+      "license": "GPL-3.0-only",
+      "publicationApproved": true
     },
     {
-      "id": "ganlinte", "repository": "ganlinte/GKD-subscription", "ref": "main",
-      "file": "dist/ganlin_gkd.json5", "licenseFiles": ["LICENSE", "README.md"],
-      "license": "MIT", "publicationApproved": false
+      "id": "ganlinte",
+      "repository": "ganlinte/GKD-subscription",
+      "ref": "main",
+      "file": "dist/ganlin_gkd.json5",
+      "licenseFiles": [
+        "LICENSE",
+        "README.md"
+      ],
+      "license": "MIT",
+      "publicationApproved": true
     },
     {
-      "id": "Lin-arm", "repository": "Lin-arm/GKD_subscription", "ref": "main",
-      "file": "dist/gkd.json5", "licenseFiles": ["README.md"],
-      "license": "NOASSERTION", "publicationApproved": false
+      "id": "Lin-arm",
+      "repository": "Lin-arm/GKD_subscription",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "licenseFiles": [
+        "README.md"
+      ],
+      "license": "NOASSERTION",
+      "publicationApproved": false
     },
     {
-      "id": "yanmuq", "repository": "yanmuq/muqi_gkd", "ref": "main",
-      "file": "dist/gkd.json5", "licenseFiles": ["LICENSE", "README.md"],
-      "license": "GPL-3.0-unresolved-version", "publicationApproved": false
+      "id": "yanmuq",
+      "repository": "yanmuq/muqi_gkd",
+      "ref": "main",
+      "file": "dist/gkd.json5",
+      "licenseFiles": [
+        "LICENSE",
+        "README.md"
+      ],
+      "license": "GPL-3.0-unresolved-version",
+      "publicationApproved": false
     }
   ]
 }

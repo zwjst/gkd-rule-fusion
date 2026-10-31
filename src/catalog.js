@@ -12,7 +12,7 @@ export function initialGroupState(group, categories, global = false) {
   };
 }
 
-export function createCatalog(loaded, report, reviewPlan, projectVersion) {
+export function createCatalog(loaded, report, reviewPlan, projectVersion, fusionRelease = null) {
   const index = new Map(report.groups.map(g => [g.id, g]));
   const statuses = new Map();
   for (const [field, status] of [['selected', '拟选待验证'], ['pending', '待审核'], ['rejected', '已拒绝']]) {
@@ -101,7 +101,8 @@ export function createCatalog(loaded, report, reviewPlan, projectVersion) {
       selectorBearingRuleRecords: groups.reduce((n, g) => n + g.selectorBearingRules, 0),
       groupsWithExplicitSelectors: groups.filter(g => g.selectorBearingRules > 0).length,
       initialEnabledGroupRecords: groups.filter(g => g.initial.enabled).length,
-      exportedSubscriptions: 0, deviceVerifiedRules: 0 },
+      exportedSubscriptions: fusionRelease ? 1 : 0, deviceVerifiedRules: 0 },
+    fusionRelease,
     sources: sourceSummary, categories: categorySummary, apps: appList, groups };
 }
 
@@ -131,10 +132,11 @@ export function catalogMarkdown(catalog) {
   const esc = s => String(s).replaceAll('|', '\\|').replace(/[\r\n]/g, ' ');
   const lines = ['# 软件与规则完整清单', '',
     `项目 v${catalog.projectVersion}；${catalog.totals.appEntriesUnion} 个包名条目，${catalog.totals.appsWithExplicitSelectors} 个至少有显式选择器。`, '',
-    '这是固定上游版本的规则清单，不代表融合订阅已经导出或通过手机验证。规则组/记录跨来源重复计数；同名软件以包名区分。', '',
+    '这是固定上游版本的调查清单，不能直接导入 GKD。规则组/记录跨来源重复计数；同名软件以包名区分。', '',
     '“初始开关”假设 App 已安装且没有用户覆盖，不含选择器有效性、版本匹配、App 总开关及设备条件。全局组单列。', '',
     '完整规则名称、来源、约束与定位见 catalog.json / rule-groups.csv；离线筛选见 catalog.html。', ''];
   lines.push('仓库公开文件下载入口：[完整清单目录](https://github.com/zwjst/gkd-rule-fusion/tree/main/catalog)。', '');
+  if (catalog.fusionRelease) lines.push(`本仓库另有可导入的融合实验版，实际包含 ${catalog.fusionRelease.counts.apps} 个 App；[订阅与导入说明](https://github.com/zwjst/gkd-rule-fusion/blob/main/dist/README.md)。调查清单范围与实际订阅不同。`, '');
   const byId = new Map(catalog.groups.map(g => [g.id, g]));
   for (const app of [...catalog.apps, { id: '@global', name: '全局规则',
     groups: catalog.groups.filter(g => g.appId === '@global').map(g => g.id) }]) {
@@ -157,8 +159,8 @@ export function catalogHtml(catalog) {
 <style>
 body{font:15px/1.6 system-ui,sans-serif;background:#f4f6f9;color:#17263a;margin:0}main{max-width:1200px;margin:auto;padding:30px 20px}h1{margin:0}header p{max-width:1000px;color:#4c5c70}.stats{display:flex;gap:12px;flex-wrap:wrap}.stat{background:white;padding:12px 22px;border-radius:10px}.stat b{display:block;font-size:25px}.filters{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 8px}input,select,button{font:inherit;padding:9px;border:1px solid #b7c2cf;border-radius:6px;background:white}input{flex:1;min-width:220px}button{cursor:pointer}summary{cursor:pointer;padding:15px;font-weight:600}details{background:white;margin:10px 0;border:1px solid #dce2e9;border-radius:8px}small,.muted{color:#526278}.box{padding:0 15px 15px}.group{border-top:1px solid #dce2e9;padding:12px 0}.badge{display:inline-block;font-size:12px;background:#edf2f8;border-radius:4px;padding:2px 6px;margin:0 5px 4px 0}.on{background:#e2f3e8}.off{background:#f1eef6}.warning{background:#fff0cf}.rules{margin:5px 0 0;padding-left:22px}code{word-break:break-all}a{color:#175ba6}#count{margin-bottom:15px}footer{margin-top:20px}.pages{display:flex;align-items:center;gap:10px;margin:20px 0}*:focus-visible{outline:3px solid #1166bb;outline-offset:2px}
 </style><main><header><h1>GKD 软件与规则清单 <small>v${catalog.projectVersion}</small></h1>
-<p>固定上游输入的可查清单。不是已发布的融合订阅；尚未通过手机验证。规则组与记录数保留各来源重复。初始开关假设 App 已安装、无用户覆盖，不能代表实际运行状态。</p></header>
-<div class="stats"><div class="stat"><b>${catalog.totals.appEntriesUnion}</b>软件包条目</div><div class="stat"><b>${catalog.totals.appsWithExplicitSelectors}</b>至少有显式选择器</div><div class="stat"><b>${catalog.totals.appGroupRecords + catalog.totals.globalGroupRecords}</b>原始规则组</div><div class="stat"><b>${catalog.totals.ruleRecords}</b>原始规则记录</div><div class="stat"><b>0</b>已导出融合订阅</div></div>
+<p>固定上游输入的调查清单，不能作为订阅文件导入。${catalog.fusionRelease ? `本仓库融合实验版实际包含 ${catalog.fusionRelease.counts.apps} 个 App，详见<a href="https://github.com/zwjst/gkd-rule-fusion/blob/main/dist/README.md">订阅与导入说明</a>。` : '本仓库尚未导出融合订阅。'}尚未通过手机验证。规则组与记录数保留各来源重复。初始开关假设 App 已安装、无用户覆盖，不能代表实际运行状态。</p></header>
+<div class="stats"><div class="stat"><b>${catalog.totals.appEntriesUnion}</b>软件包条目</div><div class="stat"><b>${catalog.totals.appsWithExplicitSelectors}</b>至少有显式选择器</div><div class="stat"><b>${catalog.totals.appGroupRecords + catalog.totals.globalGroupRecords}</b>原始规则组</div><div class="stat"><b>${catalog.totals.ruleRecords}</b>原始规则记录</div><div class="stat"><b>${catalog.totals.exportedSubscriptions}</b>已导出融合订阅</div></div>
 <div class="filters"><label for="q" hidden>搜索软件和规则</label><input id="q" type="search" placeholder="软件名称、包名或规则，如：微信、通知、原图"><label for="source" hidden>来源</label><select id="source"><option value="">全部来源</option></select><label for="category" hidden>分类</label><select id="category"><option value="">全部分类</option></select><label for="state" hidden>初始组开关</label><select id="state"><option value="">全部初始开关</option><option value="on">初始开启</option><option value="off">初始关闭</option></select><label for="status" hidden>计划状态</label><select id="status"><option value="">全部计划状态</option><option>拟选待验证</option><option>待审核</option></select></div>
 <p id="count" role="status" aria-live="polite"></p><div id="apps"></div><div class="pages"><button id="prev">上一页</button><span id="page"></span><button id="next">下一页</button></div>
 <footer class="muted">数据以包名区分应用。展开软件可查看逐组来源、名称、规则名称、约束及待查项。全局组作为独立条目显示。此文件可离线使用，不发起网络请求；源文件链接仅在点击时打开。</footer></main>

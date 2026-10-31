@@ -1,5 +1,15 @@
 # 官方 GKD 选择器独立校验
 
+## 融合成品检查
+
+```sh
+node tools/selector-validation/check-export.mjs --file dist/gkd.json5 --out dist/validation.json
+```
+
+成品检查涵盖基础结构、数值范围、身份去重、显式 key/作用域/共享状态引用、`matches` / `anyMatches` / `excludeMatches` / `excludeAllMatches`、官方语法/类型及 WASM 正则编译，并校验 position 与 swipeArg 的形状。规则描述名允许重复，不用索引补造隐式规则 key。错误会返回非零退出码；独立测试命令也包含成品检查器的边界用例。
+
+它不等于 Android 客户端完整导入与执行验证；坐标表达式求值、设备匹配、点击效果和性能仍未验证。完整未检查范围在结果 JSON 的 `unchecked` 字段中。下文工具用于四源调查输入的选择器检查，与成品范围不同。
+
 该工具独立于主项目依赖，固定使用 `@gkd-kit/selector@0.5.22`、`@gkd-kit/wasm_matches@0.0.1`、`json5@2.2.3`。需要 Node.js >=22（本轮验证为 24.19.0）和 Git。
 
 从项目根目录复现：

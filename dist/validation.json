@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "valid": true,
+  "scope": "Export-policy basic shape, duplicate identities, explicit dependency integrity, official selector syntax/type and static regex compilation. This is not exhaustive GKD client schema/import/behavior validation.",
+  "clientReference": {
+    "repository": "gkd-kit/gkd",
+    "commit": "be5eb76caabbec5cca1ec45569773b2b5f742ef7",
+    "explicitRuleKeys": "ResolvedRule.kt:54-55 and RawSubscriptionParser.kt:303: no implicit index key.",
+    "referenceScope": "ResolvedRule.kt:111-153: own group followed by group.scopeKeys in source order; preKeys selects all matching explicit keys; shared keys find first.",
+    "inheritedKeys": "RuleExecutionParameters.kt:38-39: rule actionCdKey/actionMaximumKey override group; preKeys is rule-only.",
+    "url": "https://github.com/gkd-kit/gkd/blob/be5eb76caabbec5cca1ec45569773b2b5f742ef7/gkd-app/src/commonMain/kotlin/li/gkd/app/rule/ResolvedRule.kt#L111"
+  },
+  "counts": {
+    "apps": 614,
+    "categories": 12,
+    "appGroups": 1328,
+    "globalGroups": 9,
+    "rules": 2159,
+    "selectorReferences": 2436,
+    "uniqueSelectors": 2253,
+    "passedUniqueSelectors": 2253,
+    "failedUniqueSelectors": 0,
+    "scopeReferences": 1,
+    "preKeyReferences": 252,
+    "sharedCooldownReferences": 63,
+    "sharedMaximumReferences": 43,
+    "versionPatternReferences": 0,
+    "positionObjects": 8,
+    "swipeArguments": 2
+  },
+  "controls": {
+    "valid": {
+      "expected": "pass",
+      "actual": "pass",
+      "ok": true
+    },
+    "syntax": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    },
+    "invalidRegex": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    },
+    "invalidType": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "unchecked": [
+    "Android client import and device execution, actual installed App versions, UI snapshot matching and negative cases.",
+    "Position/swipe expressions are checked for shape/coordinate presence only, not expression grammar/evaluation; action execution, performance, global/app interaction and timing behavior are unverified.",
+    "Exhaustive unknown/extension-field schema compatibility, snapshot URL availability, licensing and publication permission."
+  ],
+  "input": {
+    "file": "gkd.json5",
+    "sha256": "bafbf136ddbc089498e62be4c867f41c0a141d3368ab5bb8d6813b15a2395a89"
+  },
+  "controlRegexCompilerCalls": 1,
+  "toolchain": {
+    "tool": "gkd-rule-fusion-export-validation",
+    "version": "0.1.0",
+    "node": "v24.19.0",
+    "selector": "0.5.22",
+    "wasm_matches": "0.0.1",
+    "json5": "2.2.3",
+    "wasmSha256": "e95194602b13e241e7bfd976a85644594196bed5c537efa5d15c0ac32eed8d83",
+    "packageLockSha256": "88704b222d5e69f509a3072a37fc9653fa721bc58ad0e8c085417a9191143b6d",
+    "referenceImplementation": "@gkd-kit/tools@0.8.0 parseSelector initialization; all four selector fields checked here"
+  },
+  "regexCompilerCalls": 456
+}

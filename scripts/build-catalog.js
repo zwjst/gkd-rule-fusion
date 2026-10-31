@@ -17,6 +17,7 @@ run(['tools/selector-validation/check.mjs', '--out', path.join(stage, 'selector-
 const catalog = read(path.join(stage, 'catalog.json'));
 const selectors = read(path.join(stage, 'selector-validation.json'));
 const summary = read(path.join(stage, 'summary.json'));
+const fusionRelease = catalog.fusionRelease;
 const lock = read(path.join(root, 'sources.lock.json'));
 const fixedDate = '2026-10-31';
 const reviewedSnapshot = read(path.join(root, 'reports', fixedDate, 'summary.json'));
@@ -59,7 +60,8 @@ const lines = [
   '- [SHA-256 文件校验清单](files.sha256)', '',
   '## 订阅入口与边界', '',
   '[上游官方订阅地址与 GKD 导入步骤](../docs/SUBSCRIPTIONS.md)。本目录是数据清单，不是 GKD 订阅文件；catalog.json 和 fusion-plan.json 都不能作为订阅导入。', '',
-  '本仓库尚未发布融合订阅。规则名称代表上游收录功能，不表示实际匹配、点击或设备兼容已验证。',
+  fusionRelease ? `本仓库已导出[融合实验版](../dist/README.md)，实际包含 ${fusionRelease.counts.apps} 个 App、${fusionRelease.counts.groups} 组、${fusionRelease.counts.rules} 条规则；与四源调查清单范围不同。` : '本仓库尚未发布融合订阅。',
+  '规则名称代表上游收录功能，不表示实际匹配、点击或设备兼容已验证。',
   '初始开关是订阅配置默认值，假设 App 已安装且无用户覆盖；实际运行还受组有效性、订阅/App总开关、版本、活动及其他条件影响。', '',
   '## 来源与署名', '',
   '| 来源 | 固定提交 | 上游版本 | 包名条目 |',
@@ -90,12 +92,16 @@ write(path.join(target, 'README.md'), lines.join('\n'));
 let validation = fs.readFileSync(path.join(root, 'reports', fixedDate, 'VALIDATION.md'), 'utf8');
 validation = validation.replaceAll('../../tools/', '../tools/').replaceAll('`catalog.html`', '`index.html`')
   .replaceAll('cd /workspace/gkd-rule-fusion', 'cd gkd-rule-fusion');
+if (fusionRelease) validation = '# 历史审计记录与当前成品验证\n\n'
+  + `本页以下保留 v0.1.0 阶段的四源审计口径；当前项目已导出 v${fusionRelease.version} 融合实验订阅。`
+  + '成品检查请看 [dist/validation.json](../dist/validation.json)，导入和范围见 [订阅说明](../dist/README.md)。\n\n'
+  + validation;
 write(path.join(target, 'VALIDATION.md'), validation);
 fs.copyFileSync(path.join(root, 'sources.lock.json'), path.join(target, 'sources.lock.json'));
 write(path.join(target, 'version.json'), {
   schemaVersion: 1, projectVersion: catalog.projectVersion, inputFingerprint: hash(lock),
   catalogSha256: hash(fs.readFileSync(path.join(target, 'catalog.json'))),
-  subscriptionStatus: 'not-published', metadataOnly: true
+  subscriptionStatus: fusionRelease ? 'experimental-exported' : 'not-published', metadataOnly: true
 });
 const sums = [...owned].filter(f => f !== 'files.sha256').sort().map(file =>
   `${hash(fs.readFileSync(path.join(target, file)))}  ${file}`);

@@ -29,11 +29,16 @@ jobs:
       - run: npm --prefix tools/selector-validation ci --ignore-scripts --no-audit --no-fund
       - run: npm --prefix tools/selector-validation test
       - run: npm run sync
+      - run: npm run build:fusion
+      - run: git diff --exit-code -- dist/gkd.json5 dist/gkd.version.json config/fusion-state.json
       - run: npm run catalog
       - run: node tools/selector-validation/check.mjs --out reports/latest/selector-validation.json
       - uses: actions/upload-artifact@v4
         with:
           name: locked-source-audit
-          path: reports/latest/
+          path: |
+            reports/latest/
+            dist/
           if-no-files-found: error
-  # Phase 1 intentionally uploads reports only. No subscription Release/Pages publication.
+  # Git pushes publish the checked-in raw subscription; this job validates it.
+  # It does not silently follow upstream branches or promote an unreviewed update.

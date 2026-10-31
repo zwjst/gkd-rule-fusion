@@ -1,0 +1,85 @@
+{
+  "name": "@ganlinte/gkd-subscription",
+  "type": "module",
+  "version": "2.0.72",
+  "gkd": {
+    "outDir": "dist",
+    "file": "ganlin_gkd.json5",
+    "versionFile": "ganlin_gkd.version.json5",
+    "changelog": "CHANGELOG.md",
+    "README.md": "README.md"
+  },
+  "main": "./dist/ganlin_gkd.json5",
+  "unpkg": "./dist/ganlin_gkd.json5",
+  "jsdelivr": "./dist/ganlin_gkd.json5",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "./dist"
+  ],
+  "scripts": {
+    "postinstall": "simple-git-hooks",
+    "format": "prettier --cache --write \"**/*.{js,cjs,mjs,ts,jsx,tsx,json}\"",
+    "lint": "eslint --cache --fix \"src/**/*.{js,cjs,mjs,ts,jsx,tsx}\" \"scripts/**/*.{ts,tsx}\"",
+    "check": "tsc --noEmit && bun run ./scripts/check.ts",
+    "build": "tsc --noEmit && bun run ./scripts/build.ts"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bunx lint-staged",
+    "commit-msg": "bunx commitlint --config commitlint.config.ts --edit ${1}",
+    "pre-push": "bun run check"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,cts,mts,jsx,tsx}": [
+      "prettier --cache --write",
+      "eslint --cache --fix"
+    ],
+    "*.json": [
+      "prettier --cache --write"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.3",
+    "@commitlint/config-conventional": "21.2.3",
+    "@commitlint/types": "21.2.3",
+    "@eslint/eslintrc": "3.3.7",
+    "@eslint/js": "10.0.1",
+    "@gkd-kit/api": "0.9.3",
+    "@gkd-kit/define": "0.0.1",
+    "@gkd-kit/tools": "^0.8.0",
+    "@types/bun": "latest",
+    "@types/node": "26.6.2",
+    "@typescript-eslint/eslint-plugin": "8.70.0",
+    "@typescript-eslint/parser": "8.70.0",
+    "esbuild": "0.28.2",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-unused-imports": "4.4.1",
+    "json5": "2.2.3",
+    "lint-staged": "17.5.1",
+    "prettier": "3.9.8",
+    "simple-git-hooks": "2.14.0",
+    "typescript": "6.0.3"
+  },
+  "author": "ganlinte",
+  "license": "MIT",
+  "homepage": "https://github.com/ganlinte/gkd-subscription#readme",
+  "bugs": {
+    "url": "https://github.com/ganlinte/gkd-subscription/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganlinte/gkd-subscription.git"
+  },
+  "packageManager": "bun@1.2.21",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "picocolors": "1.1.1",
+    "typescript-eslint": "^8.70.0"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "inputFingerprint": "1eaf1819090f6eb36d6a0b592d5f8570ccbd1c183c4e5f8ba0312672d5dbd4c6",
+  "inputFingerprint": "4964c3597b65470fe93e4e4846d52a1f5f20b7cdef83de8ce0ee1718332f10a4",
   "scope": "Official selector syntax + context type checking, including anyMatches and group-level inherited selectors; not Android behavior or complete subscription schema validation.",
   "toolchain": {
     "tool": "gkd-rule-fusion-selector-validation",

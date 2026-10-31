@@ -68975,15 +68975,13 @@
     "zhongxinjiantou.szkingdom.android.newphone"
   ],
   "licenseBlockedSources": [
-    "aoguai",
-    "ganlinte",
     "Lin-arm",
     "yanmuq"
   ],
   "limitations": [
-    "No subscription exporter in phase 1; selection is a proposal.",
+    "This four-source review plan is a proposal, not the separately configured fusion release; see dist/manifest.json and dist/validation.json for that release.",
     "Cross-group references, category defaults, global overlap and key allocation need export-stage validation."
   ],
-  "inputFingerprint": "1eaf1819090f6eb36d6a0b592d5f8570ccbd1c183c4e5f8ba0312672d5dbd4c6",
+  "inputFingerprint": "4964c3597b65470fe93e4e4846d52a1f5f20b7cdef83de8ce0ee1718332f10a4",
   "policyFingerprint": "cf212fd1a8d3a876293d0ad1beea57ed7c92ce61ab31cecc334920ae6f65fc0e"
 }

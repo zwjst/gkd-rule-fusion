@@ -8,7 +8,8 @@
   },
   "scripts": {
     "check": "node check.mjs",
-    "test": "node --test fixture-check.mjs"
+    "check:export": "node check-export.mjs",
+    "test": "node --test fixture-check.mjs export-fixtures.mjs"
   },
   "dependencies": {
     "@gkd-kit/selector": "0.5.22",

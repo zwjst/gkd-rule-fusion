@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "projectVersion": "0.1.0",
-  "inputFingerprint": "1eaf1819090f6eb36d6a0b592d5f8570ccbd1c183c4e5f8ba0312672d5dbd4c6",
+  "projectVersion": "0.2.0",
+  "inputFingerprint": "4964c3597b65470fe93e4e4846d52a1f5f20b7cdef83de8ce0ee1718332f10a4",
   "definition": "Locked upstream inventory, not an exported or device-verified fusion subscription.",
   "initialStateAssumption": "Fresh subscription; app installed; no user/category/group overrides; runtime validity and version matching not included.",
   "totals": {
@@ -13,8 +13,22 @@
     "selectorBearingRuleRecords": 6784,
     "groupsWithExplicitSelectors": 4286,
     "initialEnabledGroupRecords": 311,
-    "exportedSubscriptions": 0,
+    "exportedSubscriptions": 1,
     "deviceVerifiedRules": 0
+  },
+  "fusionRelease": {
+    "id": 20261031,
+    "version": 1,
+    "channel": "experimental",
+    "counts": {
+      "apps": 614,
+      "appGroups": 1328,
+      "globalGroups": 9,
+      "groups": 1337,
+      "rules": 2159,
+      "quarantinedGroups": 3
+    },
+    "url": "https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.json5"
   },
   "sources": [
     {

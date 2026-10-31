@@ -1,103 +1,95 @@
-# 订阅链接与使用说明
+# 融合订阅与使用说明
 
-本页提供四个上游仓库公布的订阅文件地址。**当前 GKD Rule Fusion v0.1.0 仅发布审计和软件规则目录，没有导出本仓库自己的融合订阅，也没有稳定版/测试版融合订阅链接。** `catalog/` 中的 Markdown、CSV、HTML 和 JSON 是查询清单，不能导入 GKD 作为订阅。
+当前项目 **v0.2.0**，提供已生成的 GKD Rule Fusion **实验版**。软件调查目录与实际订阅采用不同范围：目录调查四源共 1,053 个包名条目，当前融合订阅包含 614 个 App；目录中的条目不能全部当成融合版已支持。
 
-## 上游官方链接
+## 本仓库融合实验版
 
-| 来源 | 可复制的官方订阅地址 | 本轮 ID / 版本 | 来源定位 |
-| --- | --- | --- | --- |
-| [奥怪 aoguai](https://github.com/aoguai/subscription) | [aoguai_gkd.json5](https://raw.githubusercontent.com/aoguai/subscription/custom/dist/aoguai_gkd.json5) | 86 / v89 | 维护范围较精简的主来源候选，72 个 App 条目 |
-| [甘霖 ganlinte](https://github.com/ganlinte/GKD-subscription) | [ganlin_gkd.json5](https://raw.githubusercontent.com/ganlinte/GKD-subscription/main/dist/ganlin_gkd.json5) | 233 / v72 | 主来源或补充来源候选，610 个 App 条目 |
-| [Lin-arm](https://github.com/Lin-arm/GKD_subscription) | [gkd.json5](https://raw.githubusercontent.com/Lin-arm/GKD_subscription/main/dist/gkd.json5) | 667 / v622 | 社区续更来源，997 个 App 条目；再发布许可待明确 |
-| [木七 yanmuq](https://github.com/yanmuq/muqi_gkd) | [gkd.json5](https://raw.githubusercontent.com/yanmuq/muqi_gkd/main/dist/gkd.json5) | 808 / v53 | 附加规则，34 个 App 条目，无全局规则组 |
-
-以下纯文本便于复制。链接中的 `custom` / `main` 是上游分支，会随上游更新，不固定到本仓库审计版本。
-
-奥怪：
+直接复制此地址添加至 GKD：
 
 ```text
-https://raw.githubusercontent.com/aoguai/subscription/custom/dist/aoguai_gkd.json5
+https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.json5
 ```
 
-甘霖：
+| 项目 | 当前值 |
+| --- | --- |
+| 名称 | GKD Rule Fusion · 融合实验版 |
+| ID | 20261031 |
+| 整数订阅版本 | 1 |
+| 通道 | experimental，尚无独立稳定版 |
+| 许可 | GPL-3.0-only |
+| 内容 | 614 App、1,328 应用组、9 全局组，共 1,337 组 / 2,159 条规则记录 |
+| 版本文件 | [gkd.version.json](https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.version.json) |
 
-```text
-https://raw.githubusercontent.com/ganlinte/GKD-subscription/main/dist/ganlin_gkd.json5
-```
-
-Lin-arm：
-
-```text
-https://raw.githubusercontent.com/Lin-arm/GKD_subscription/main/dist/gkd.json5
-```
-
-木七：
-
-```text
-https://raw.githubusercontent.com/yanmuq/muqi_gkd/main/dist/gkd.json5
-```
-
-上述路径均取自 [锁定提交](../sources.lock.json) 的上游 README。2026-10-31 实际 HTTPS GET 验证：四条正文链接均为 **HTTP 200**，内容能以 JSON5 解析，ID、版本和 App 数与上表及快照一致。链接可访问不等于已经完成手机端导入或自动更新测试；后续上游变化也不由本仓库控制。
+订阅已在项目内生成，文件及配套说明均位于 [dist](../dist/README.md)。静态校验通过，不代表 Android 导入、点击安全、特定版本适配或耗电已经验证。
 
 ## 在 GKD 中导入
 
-1. 先在 [软件完整清单](../catalog/APP_CATALOG.md) 中查找软件名称或包名，确认需要的来源与规则组。
-2. 复制上面的订阅文件地址，打开 GKD 的“订阅”页面，点 **+**，粘贴地址并确认添加。不同客户端版本的按钮文字可能略有差异。
-3. 检查订阅名称、ID 和版本，进入对应 App 或规则分类，按自己的需求开启规则。链接应指向 `.json5` 文件，仓库首页或 HTML 清单不能作为订阅导入。
-4. 使用时观察是否正确命中。若误触，先关闭对应规则组并保留 App 版本、页面和快照信息，再向对应上游反馈。规则详细名称与来源可在 [逐组清单](../catalog/rule-groups.csv) 查询。
+1. 复制本仓库的 `dist/gkd.json5` 完整 raw 地址。
+2. 打开 GKD 的“订阅”页，点 **+**，粘贴地址并确认添加。客户端版本不同，按钮文字可能略有差异。
+3. 确认名称为“GKD Rule Fusion · 融合实验版”、ID 为 **20261031**、版本为 **1**。进入具体 App 或分类，按需开启规则。
+4. 先观察常用页面的实际行为，出现误触时关闭对应组并记录 App 版本、页面和快照，再提交问题。详细来源可查 [provenance.json](../dist/provenance.json)。
 
-需要 GKD 本身的功能和权限设置时，参考 [GKD 官方使用文档](https://gkd.li/guide/)。本仓库没有实测你的设备权限、App 版本或页面状态。
+`catalog.json`、`fusion-plan.json`、CSV、HTML，以及只含 id/version 的版本文件，都不是规则订阅。GKD 本身的权限设置见 [官方使用文档](https://gkd.li/guide/)。
 
-## 主来源与附加来源
+已使用融合版时，通常不应同时启用其已纳入的奥怪和甘霖原订阅相同规则。其他附加订阅需要逐 App、逐组对照，不保证天然无冲突。
 
-建议先选择一个满足常用 App 需求的主来源，再按具体缺口启用补充来源。多来源的规则组可能使用不同选择器完成同一操作；“附加订阅”定位也不能证明完全无冲突。
+## 融合策略与隔离组
 
-主来源之间有大量共享 App。不要仅因来源不同就同时开启同一 App 的所有组，尤其不要同时启用多套全局广告规则。木七没有全局组，但其共享 App 仍需逐组对照。四源的静态覆盖、默认开关和待审核状态见 [完整目录说明](../catalog/README.md)，重复与差异见 [审计报告](../reports/2026-10-31/AUDIT.md)。
+每个 App 选择一个上游：共享 App 选择奥怪的完整应用规则，奥怪未包含的 App 选择甘霖。当前是奥怪 **72 App**、甘霖 **542 App**。全局规则仅来自奥怪的 **9 组**，未叠加甘霖全局组。
 
-## 默认启用状态怎么看
+组 key、规则 key、顺序、scopeKeys、preKeys 以及共享计数/冷却引用均保留。选入范围中存在以下三个上游问题组，已作为明确例外整体隔离，其他保留组没有指向它们的依赖：
 
-清单中的“初始开关”表示无用户覆盖时的**订阅配置默认值**，假设 App 已安装；不表示当前手机已经实际启用，也不保证规则有效。
-
-| 来源 | 应用组默认开 / 关 | 全局组默认开 / 关 |
-| --- | ---: | ---: |
-| aoguai | 4 / 276 | 1 / 8 |
-| ganlinte | 104 / 1,285 | 3 / 0 |
-| Lin-arm | 180 / 2,310 | 3 / 0 |
-| yanmuq | 16 / 100 | 0 / 0 |
-
-分类与组开关有继承关系，不能只看 `group.enable`。各源也不能统一概括为“全部开屏规则默认开启”：本轮木七的 12 个开屏组均默认关闭，默认开启的是 12 个“全屏弹窗”组与 4 个“权限控制”组。
-
-实际执行还受订阅总开关、App 总开关、规则有效性、活动/版本限制、用户排除和设备条件影响。全局组还受 App 排除、系统 App/桌面策略、同名应用组覆盖等限制，不能给每个软件直接加上全部全局组。公式和官方证据见 [校验报告](../reports/2026-10-31/VALIDATION.md#默认开关)。
-
-## 更新状态与奥怪版本检查路径
-
-上表的分支订阅地址随上游维护更新。GKD 客户端的检测/刷新方式参考其界面和上游说明；本轮仅验证远程文件获取和静态内容，未实测手机端更新。
-
-奥怪本轮订阅正文包含 `checkUpdateUrl: './gkd.version.json5'`，其实际解析到的地址是：
-
-```text
-https://raw.githubusercontent.com/aoguai/subscription/custom/dist/gkd.version.json5
-```
-
-该地址在本轮请求中返回 **HTTP 404**。同一提交实际提供的版本文件是：
-
-```text
-https://raw.githubusercontent.com/aoguai/subscription/custom/dist/aoguai_gkd.version.json5
-```
-
-后者本轮返回 **HTTP 200**。因此可以确认订阅正文能取得，但**尚未确认客户端是否会回退获取完整订阅，以及自动更新是否正常**。本仓库没有修改上游文件；若遇更新失败，请向 aoguai 上游核实并按上游指导处理。不要把版本描述文件本身作为规则订阅导入。
-
-其余三源的正文 `checkUpdateUrl` 文件名与锁定提交中的版本文件名一致；这只是路径核对结果，不代表客户端更新测试通过。
-
-## 许可证与本仓库融合发布状态
-
-| 来源 | 许可调查结果 | 本仓库当前处理 |
+| 来源 / App | 隔离组 | 原因 |
 | --- | --- | --- |
-| aoguai | package 声明 GPL-3.0-only，并有 LICENSE、LEGAL.md；LEGAL 1.4 说明其声明不追加授权条件 | 提供上游官方链接与审计元数据；融合再发布需准备相应源码、修改和署名等交付 |
-| ganlinte | LICENSE 为 MIT | 提供上游官方链接与审计元数据；融合再发布仍需保留版权许可并核对派生来源 |
-| Lin-arm | 当前提交未见 LICENSE/COPYING；README 有禁止国内平台传播声明及派生链说明 | 不将“GitHub 公开”视作再发布授权；保持许可待明确 |
-| yanmuq | 有 GPL v3 文本，only/or-later 范围未明确；README 另有传播限制声明 | 保持再发布条件待核实 |
+| 甘霖 / 刺猬猫阅读 `com.kuangxiangciweimao.novel` | key 5，功能类-签到 | 两条规则继承 actionCdKey=2，但显式作用域内无规则 key 2 |
+| 甘霖 / 懂车帝 `com.ss.android.auto` | key 1，全屏广告-首页推荐卡片广告 | 两条规则的 preKeys=1 无可解析的显式目标 |
+| 甘霖 / 优酷 `com.youku.phone` | key 1，更新提示 | rules=[]，为空占位组 |
 
-详细证据见 [上游调查](UPSTREAM_RESEARCH.md)。所有来源的 `publicationApproved` 目前均为 `false`，融合计划的 `publicationReady` 也为 `false`。上游链接可被个人用于订阅，不表示本仓库已经获得将上游正文合并再发布的全部许可。
+隔离从原始候选 1,340 组 / 2,164 记录中移除了 3 组 / 5 记录，留下 1,337 组 / 2,159 记录。三个 App 的其他保留组仍在订阅内，所以 App 总数为 614。没有通过补造 key 或删除前置条件来使错误规则“通过”。完整原因与定位见 [quarantine.json](../dist/quarantine.json)。
 
-本仓库公开的是名称、包名、组名、规则名称、配置与定位等目录数据，未把上游选择器正文作为融合订阅再发布。稳定版/测试版导出、完整订阅结构验证、设备回归和发布门禁仍在 [后续开发范围](ROADMAP.md) 中。未来只有实际生成并发布合格产物后，才会在本页增加本仓库的融合订阅地址。
+Lin-arm 和木七仍可用于四源对照目录，但目前未进入成品：Lin-arm 许可未明确，木七的 GPL 版本范围和传播声明关系待核实。发布范围没有默认扩展为全部四源。
+
+## 初始开关与全局交互
+
+为保留各来源初始配置，导出器按原分类列表第一个名称前缀匹配，计算应用组 `category?.enable ?? group.enable ?? true`，并写为每组显式 `enable`；融合分类不写默认 enable。全局组使用其原 `group.enable ?? true`。这保留初始组开关，不保证运行时一定启用。
+
+用户修改类别、App、组或订阅总开关后，实际启用状态会改变。规则有效性、App 安装状态、版本/活动限制、用户排除和设备页面也会影响执行。
+
+奥怪全局组的 `disableIfAppGroupMatch` 会按组名匹配同订阅内的应用组；加入甘霖补充 App 后，某些全局组可能在这些 App 上被屏蔽，以避免与应用组重复。匹配还受 `ignoreGlobalGroupMatch`、全局 apps 排除、桌面和系统 App 策略等影响。这是融合结构带来的交互变化，尚未完成实机回归；不能把 9 个全局组直接加到每个 App 的支持组数中。
+
+## 校验与证据
+
+本次成品静态校验：**2,253 / 2,253 个不同选择器通过，0 错误、0 警告**。还检查基础结构、重复身份、显式 scope/pre/shared 引用完整性。官方工具执行选择器语法、属性类型与静态正则编译；完整范围和工具链摘要见 [validation.json](../dist/validation.json)。
+
+尚未执行 Android 客户端完整导入或设备操作、正负快照回归、坐标表达式完整语法/求值验证、耗电与性能测量。静态通过不表示全量兼容、无误触或任何 App 版本都有效。
+
+- [成品 manifest](../dist/manifest.json)：订阅身份、内容数量、输入与产物摘要、源码归档信息。
+- [实际软件 CSV](../dist/apps.csv)、[实际规则组 CSV](../dist/rule-groups.csv)：仅列当前融合订阅中的 614 个 App、1,337 组。
+- [逐组/逐规则来源](../dist/provenance.json)：固定提交、路径、JSON Pointer 和导出变更。
+- [隔离组](../dist/quarantine.json)：未导出问题及原因。
+- [SHA-256 校验表](../dist/files.sha256)：成品与配套元数据摘要。
+- [对应源码与许可](../third_party/README.md)：两个固定提交完整源码、原始声明及重建方法。
+- [修改声明与署名](../dist/NOTICE.md)：修改日期、派生处理说明与源码归档摘要。
+
+## 更新与版本
+
+本仓库订阅声明 `checkUpdateUrl: './gkd.version.json'`，对应同目录版本文件。文件只需包含相同订阅 ID 与整数版本；版本增加后，GKD 才会替换旧内容。本仓库未来发布内容变化必须保持 ID **20261031** 并递增订阅版本。
+
+当前产物基于锁定且审核过的两个提交。**尚未宣称自动同步上游、自动晋升稳定版或手机端更新回退已验证。** 更新候选需要审核来源提交、许可、引用、隔离变化和回归结果；详细计划见 [ROADMAP](ROADMAP.md)。
+
+奥怪原订阅另有路径问题：其 `checkUpdateUrl` 指向 `custom/dist/gkd.version.json5`，本轮返回 HTTP 404；实际提供的 `custom/dist/aoguai_gkd.version.json5` 返回 HTTP 200。官方客户端源码在检查版本失败后会继续尝试抓完整订阅，但本轮没有实机验证。**本仓库使用独立生成的 gkd.version.json，不继承该错误路径。**
+
+## 可选上游原订阅
+
+以下链接来自各上游 README，由原作者独立维护，**不是本仓库融合版的镜像或其他通道**。本轮正文请求均为 HTTP 200，ID/版本与锁定快照一致；浮动分支后续可继续变化。
+
+| 来源 | 官方订阅地址 | 本轮 ID / 版本 |
+| --- | --- | --- |
+| [奥怪](https://github.com/aoguai/subscription) | [aoguai_gkd.json5](https://raw.githubusercontent.com/aoguai/subscription/custom/dist/aoguai_gkd.json5) | 86 / v89 |
+| [甘霖](https://github.com/ganlinte/GKD-subscription) | [ganlin_gkd.json5](https://raw.githubusercontent.com/ganlinte/GKD-subscription/main/dist/ganlin_gkd.json5) | 233 / v72 |
+| [Lin-arm](https://github.com/Lin-arm/GKD_subscription) | [gkd.json5](https://raw.githubusercontent.com/Lin-arm/GKD_subscription/main/dist/gkd.json5) | 667 / v622 |
+| [木七](https://github.com/yanmuq/muqi_gkd) | [gkd.json5](https://raw.githubusercontent.com/yanmuq/muqi_gkd/main/dist/gkd.json5) | 808 / v53 |
+
+本次融合采用奥怪 GPL-3.0-only 与甘霖 MIT，按 GPL-3.0-only 提供派生产物，并保留两源许可、版权和对应源码。完整说明见 [third_party](../third_party/README.md)。其他两源的官方链接列出供用户对照，不表示本仓库获得其再发布授权。
+
+`reports/2026-10-31/` 的早期 v0.1 文档保留历史审计状态。当前订阅范围和校验以本页、[manifest](../dist/manifest.json) 和 [validation](../dist/validation.json) 为准。
