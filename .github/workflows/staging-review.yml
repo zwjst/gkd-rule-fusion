@@ -10,6 +10,7 @@ on:
       - 'src/release-readiness.js'
       - 'test/release-readiness.test.js'
       - 'config/device-test-evidence.json'
+      - 'config/release-policy.json'
       - 'scripts/audit-candidate-licenses.mjs'
       - '.github/workflows/staging-review.yml'
       - 'config/candidate-sources.json'
