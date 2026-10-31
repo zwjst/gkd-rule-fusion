@@ -8,7 +8,7 @@ const read = p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const sources=read('config/candidate-sources.json').sources;
 const approvals=read('config/staging-approvals.json');
 if(approvals.schemaVersion!==1||!Array.isArray(approvals.approvedSources)||!Array.isArray(approvals.approvedGroups))throw Error('Invalid staging approvals');
-const approvedSources=new Set(approvals.approvedSources.filter(x=>x.reviewed===true&&x.redistributionApproved===true&&typeof x.evidenceUrl==='string'&&/^https:\/\//.test(x.evidenceUrl)).map(x=>x.id));
+const sourceApprovals=new Map(approvals.approvedSources.filter(x=>x.reviewed===true&&x.redistributionApproved===true&&typeof x.evidenceUrl==='string'&&/^https:\/\//.test(x.evidenceUrl)&&/^[a-f0-9]{40}$/.test(x.commit??'')&&/^[a-f0-9]{64}$/.test(x.sha256??'')).map(x=>[x.id,x]));
 const approvedGroups=new Set(approvals.approvedGroups.filter(x=>x.reviewed===true&&x.runtimeTested===true&&typeof x.appId==='string'&&/^[a-f0-9]{64}$/.test(x.signature)).map(x=>x.appId+'|'+x.signature));
 const current=JSON5.parse(fs.readFileSync('dist/gkd.json5','utf8'));
 const known=new Map(current.apps.map(a=>[a.id,a]));
@@ -76,7 +76,7 @@ for(const item of report.reviewQueue){
   entry.selectorReview[item.source]=item.selectorReview;
 }
 for(const entry of merged.values()){
-  const legal=entry.sources.some(x=>approvedSources.has(x.source));
+  const legal=entry.sources.some(x=>{const approved=sourceApprovals.get(x.source);const actual=report.sources.find(s=>s.source===x.source);return approved&&actual?.status==='analyzed'&&approved.commit===actual.commit&&approved.sha256===actual.sha256;});
   const checked=approvedGroups.has(entry.appId+'|'+entry.signature);
   entry.reviewStatus=entry.alreadyInBaseline?'already-published':entry.risk.length?'risk-review-required':!legal?'license-review-required':!checked?'runtime-review-required':'approved-for-staging';
   entry.publication=entry.reviewStatus==='approved-for-staging'?'staging-approved':'blocked';
