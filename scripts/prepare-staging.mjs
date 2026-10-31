@@ -6,6 +6,10 @@ import JSON5 from 'json5';
 import { dependencyIssues } from '../src/export.js';
 const read = p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const sources=read('config/candidate-sources.json').sources;
+const approvals=read('config/staging-approvals.json');
+if(approvals.schemaVersion!==1||!Array.isArray(approvals.approvedSources)||!Array.isArray(approvals.approvedGroups))throw Error('Invalid staging approvals');
+const approvedSources=new Set(approvals.approvedSources.filter(x=>x.reviewed===true&&x.redistributionApproved===true&&typeof x.evidenceUrl==='string'&&/^https:\/\//.test(x.evidenceUrl)).map(x=>x.id));
+const approvedGroups=new Set(approvals.approvedGroups.filter(x=>x.reviewed===true&&x.runtimeTested===true&&typeof x.appId==='string'&&/^[a-f0-9]{64}$/.test(x.signature)).map(x=>x.appId+'|'+x.signature));
 const current=JSON5.parse(fs.readFileSync('dist/gkd.json5','utf8'));
 const known=new Map(current.apps.map(a=>[a.id,a]));
 const report={schemaVersion:2,baseline:{id:current.id,version:current.version,apps:current.apps.length},sources:[],reviewQueue:[],preview:{status:'baseline-only',containsUnapprovedRules:false}};
@@ -53,6 +57,12 @@ for(const item of report.reviewQueue){
   entry.risk=[...new Set([...entry.risk,...item.risk])].sort();
   entry.issues.push(...item.issues.map(issue=>({...issue,source:item.source})));
 }
+for(const entry of merged.values()){
+  const legal=entry.sources.some(x=>approvedSources.has(x.source));
+  const checked=approvedGroups.has(entry.appId+'|'+entry.signature);
+  entry.reviewStatus=entry.alreadyInBaseline?'already-published':entry.risk.length?'risk-review-required':!legal?'license-review-required':!checked?'runtime-review-required':'approved-for-staging';
+  entry.publication=entry.reviewStatus==='approved-for-staging'?'staging-approved':'blocked';
+}
 report.deduplicatedReview=[...merged.values()].sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
 report.summary={
   rawCandidates:report.reviewQueue.length,
@@ -63,10 +73,13 @@ report.summary={
   dependencyRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('dependency')).length,
   genericSelectorRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('generic-selector')).length,
   cleanStaticCandidates:report.deduplicatedReview.filter(x=>!x.risk.length&&!x.alreadyInBaseline).length,
-  publishableCandidates:0
+  publishableCandidates:report.deduplicatedReview.filter(x=>x.reviewStatus==='approved-for-staging').length
 };
 report.reviewQueue.sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
 fs.mkdirSync('reports/staging',{recursive:true});
+const buckets={};
+for(const entry of report.deduplicatedReview)(buckets[entry.reviewStatus]??=[]).push(entry);
+for(const [status,entries] of Object.entries(buckets))fs.writeFileSync('reports/staging/'+status+'.json',JSON.stringify(entries,null,2)+'\n');
 fs.writeFileSync('reports/staging/deduplicated-review.json',JSON.stringify({summary:report.summary,candidates:report.deduplicatedReview},null,2)+'\n');
 fs.writeFileSync('reports/staging/review.json',JSON.stringify(report,null,2)+'\n');
 const md=['# GKD staging review','','**No unapproved third-party rules are redistributed.**','','| Source | Status | Apps | Groups | Ad/popup candidates | Dependency findings | Generic selector groups | License |','|---|---|---:|---:|---:|---:|---:|---|'];
