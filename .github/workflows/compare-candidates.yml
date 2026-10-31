@@ -1,0 +1,33 @@
+name: Multi-source candidate comparison
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/compare-candidates.mjs'
+      - 'config/candidate-sources.json'
+      - '.github/workflows/compare-candidates.yml'
+  push:
+    branches:
+      - feature/multi-source-candidate-analysis
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - name: Compare additional public subscriptions
+        run: node scripts/compare-candidates.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candidate-comparison
+          path: reports/candidates/
+          if-no-files-found: ignore

@@ -1,0 +1,69 @@
+name: Staging candidate review
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/multi-source-candidate-analysis
+    paths:
+      - 'scripts/prepare-staging.mjs'
+      - 'scripts/build-overall-validation.mjs'
+      - 'src/release-readiness.js'
+      - 'test/release-readiness.test.js'
+      - 'config/device-test-evidence.json'
+      - 'config/release-policy.json'
+      - 'scripts/audit-candidate-licenses.mjs'
+      - '.github/workflows/staging-review.yml'
+      - 'config/candidate-sources.json'
+      - 'config/staging-approvals.json'
+  pull_request:
+    paths:
+      - 'scripts/audit-candidate-licenses.mjs'
+      - 'config/staging-approvals.json'
+      - 'scripts/prepare-staging.mjs'
+      - '.github/workflows/staging-review.yml'
+permissions:
+  contents: read
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: node scripts/prepare-staging.mjs
+      - name: Collect upstream license evidence
+        run: node scripts/audit-candidate-licenses.mjs
+      - name: Install isolated selector validator dependencies
+        working-directory: tools/selector-validation
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate preview subscription
+        run: node tools/selector-validation/check-export.mjs --file reports/staging/gkd-preview.json5 --out reports/staging/validation.json
+      - name: Generate overall validation and publication gate
+        run: node scripts/build-overall-validation.mjs
+      - name: Publish staging summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f reports/staging/overall-validation.md ]; then
+            cat reports/staging/overall-validation.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f reports/staging/README.md ]; then
+            cat reports/staging/README.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f reports/staging/license-evidence.md ]; then
+            cat reports/staging/license-evidence.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f reports/staging/manual-review-queue.md ]; then
+            cat reports/staging/manual-review-queue.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staging-review-and-preview
+          path: reports/staging/
+          if-no-files-found: ignore
