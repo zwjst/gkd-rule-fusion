@@ -102,20 +102,36 @@ const reviewPriority=report.deduplicatedReview.filter(x=>!x.alreadyInBaseline).m
     x.risk.includes('no-rule-selector')?'P1-missing-selector':
     x.sources.length>1?'P3-cross-source-verification':'P4-manual-verification'
 })).sort((a,b)=>a.priority.localeCompare(b.priority)||b.sources.length-a.sources.length||a.appId.localeCompare(b.appId));
-fs.writeFileSync('reports/staging/manual-review-queue.json',JSON.stringify(reviewPriority,null,2)+'\\n');
+fs.writeFileSync('reports/staging/manual-review-queue.json',JSON.stringify(reviewPriority,null,2)+'\n');
 const reviewMd=['# Manual review priorities','','All entries remain blocked until license evidence and device testing are approved.','','| Priority | Count |','|---|---:|'];
 for(const p of [...new Set(reviewPriority.map(x=>x.priority))])reviewMd.push('| '+p+' | '+reviewPriority.filter(x=>x.priority===p).length+' |');
 reviewMd.push('','## First 30 candidates','','| Priority | Application | Group | Sources | Risks |','|---|---|---|---|---|');
 for(const x of reviewPriority.slice(0,30))reviewMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,70),x.sources.join(', '),x.risk.join(', ')||'none'].join(' | ')+' |');
-fs.writeFileSync('reports/staging/manual-review-queue.md',reviewMd.join('\\n')+'\\n');
+fs.writeFileSync('reports/staging/manual-review-queue.md',reviewMd.join('\n')+'\n');
 const urgent=reviewPriority.filter(x=>x.priority.startsWith('P0-')||x.priority.startsWith('P1-'));
-fs.writeFileSync('reports/staging/urgent-review.json',JSON.stringify(urgent,null,2)+'\\n');
+fs.writeFileSync('reports/staging/urgent-review.json',JSON.stringify(urgent,null,2)+'\n');
 const urgentMd=['# Urgent dependency and false-positive review','','These are static findings; no candidate is safe to redistribute without source permission.','','| Priority | App | Group | Dependency findings | Selector context |','|---|---|---|---:|---|'];
 for(const x of urgent.slice(0,100)){
  const guarded=Object.values(x.selectorReview??{}).some(y=>y.hasContextGuard);
  urgentMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,55),x.dependencyFindings.length,guarded?'some guards':'no detected guards'].join(' | ')+' |');
 }
-fs.writeFileSync('reports/staging/urgent-review.md',urgentMd.join('\\n')+'\\n');
+fs.writeFileSync('reports/staging/urgent-review.md',urgentMd.join('\n')+'\n');
+const actionable=urgent.map(x=>({
+  ...x,
+  diagnosis:x.dependencyFindings.length
+    ? x.dependencyFindings.map(f=>({type:f.type,ruleIndex:f.index??null,missingKey:f.key??null,source:f.source,action:'Verify referenced rule/group keys against the original app; repair or exclude only after upstream review'}))
+    : [],
+  selectorActions:x.risk.includes('broad-selector-without-context-guard')
+    ? ['Inspect exact matches/anyMatches and activity scope','Verify popup identity and negative conditions','Test against ordinary navigation and login/consent dialogs on device']
+    : []
+}));
+fs.writeFileSync('reports/staging/actionable-review.json',JSON.stringify(actionable,null,2)+'\n');
+const actionMd=['# Actionable urgent review','','No automatic fixes or publication approvals.','','| Priority | App | Group | Dependency diagnosis | Recommended check |','|---|---|---|---|---|'];
+for(const x of actionable.slice(0,100)){
+  const details=x.diagnosis.map(d=>d.type+(d.missingKey===null?'':' ('+d.missingKey+')')).join('; ');
+  actionMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,55),details||'none',x.selectorActions.join('; ')||'verify upstream dependency keys'].map(v=>String(v).replaceAll('|','/')).join(' | ')+' |');
+}
+fs.writeFileSync('reports/staging/actionable-review.md',actionMd.join('\n')+'\n');
 const buckets={};
 for(const entry of report.deduplicatedReview)(buckets[entry.reviewStatus]??=[]).push(entry);
 for(const [status,entries] of Object.entries(buckets))fs.writeFileSync('reports/staging/'+status+'.json',JSON.stringify(entries,null,2)+'\n');
