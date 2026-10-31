@@ -19,6 +19,12 @@ const broad=/(@TextView|@ImageView|\btext\s*==\s*['"]?[xX×✕关闭]|text\s*\*=
 const fingerprint=v=>crypto.createHash('sha256').update(JSON.stringify(v,(_k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b))):x)).digest('hex');
 const signature=g=>fingerprint(list(g.rules).map(r=>typeof r==='string'?{matches:r}:r));
 const baselineSignatures=new Map(current.apps.map(a=>[a.id,new Set((a.groups??[]).map(signature))]));
+const selectorContext=group=>{
+  const rr=list(group.rules).filter(r=>r&&typeof r==='object');
+  const strings=[...list(group.matches),...list(group.anyMatches),...rr.flatMap(r=>[...list(r.matches),...list(r.anyMatches)])].filter(x=>typeof x==='string');
+  const hasGuard=Boolean(group.activityIds||group.excludeActivityIds||group.scopeKeys||group.preKeys||rr.some(r=>r.activityIds||r.excludeActivityIds||r.preKeys||r.scopeKeys));
+  return {strings,hasGuard};
+};
 const suspicious=/开屏|广告|弹窗|跳过|关闭|跳过广告|splash|ad.?skip|popup/i;
 for(const src of sources){
   const row={source:src.id,repository:src.repository,declaredLicense:src.license,publicationApproved:false,status:'pending',apps:0,groups:0,review:0,blocked:0,dependencyIssues:0,riskySelectors:0};
@@ -34,12 +40,17 @@ for(const src of sources){
         row.groups++;
         const issues=dependencyIssues(group,app.groups??[]);
         const selectors=list(group.rules).flatMap(r=>typeof r==='string'?[r]:[r.matches,r.anyMatches]).filter(Boolean).map(text);
-        const risky=selectors.some(s=>broad.test(s));
+        const context=selectorContext(group);
+        const risky=context.strings.some(s=>broad.test(s));
+        const riskReasons=[
+          ...(risky?['broad-selector']:[]),
+          ...(risky&&!context.hasGuard?['broad-selector-without-context-guard']:[])
+        ];
         const relevant=suspicious.test([group.name,group.desc,...list(group.category)].join(' '));
-        const risk=[...(issues.length?['dependency']:[]),...(risky?['generic-selector']:[]),...(selectors.length===0?['no-rule-selector']:[])];
+        const risk=[...(issues.length?['dependency']:[]),...riskReasons.map(x=>x==='broad-selector'?'generic-selector':x),...(selectors.length===0?['no-rule-selector']:[])];
         row.dependencyIssues+=issues.length;row.riskySelectors+=Number(risky);
         if(!relevant)continue;
-        const record={source:src.id,signature:signature(group),alreadyInBaseline:baselineSignatures.get(app.id)?.has(signature(group))??false,appId:app.id,appName:app.name??app.id,groupKey:group.key,groupName:group.name??'',inBaseline:known.has(app.id),risk,issues,publication:'blocked-unverified-license'};
+        const record={source:src.id,signature:signature(group),alreadyInBaseline:baselineSignatures.get(app.id)?.has(signature(group))??false,appId:app.id,appName:app.name??app.id,groupKey:group.key,groupName:group.name??'',inBaseline:known.has(app.id),risk,issues,selectorReview:{hasContextGuard:context.hasGuard,selectorCount:context.strings.length,reasonCodes:riskReasons},publication:'blocked-unverified-license'};
         report.reviewQueue.push(record);row.review++;
         row.blocked++;
       }
@@ -56,6 +67,8 @@ for(const item of report.reviewQueue){
   entry.sources.push({source:item.source,groupKey:item.groupKey,groupName:item.groupName});
   entry.risk=[...new Set([...entry.risk,...item.risk])].sort();
   entry.issues.push(...item.issues.map(issue=>({...issue,source:item.source})));
+  entry.selectorReview??={};
+  entry.selectorReview[item.source]=item.selectorReview;
 }
 for(const entry of merged.values()){
   const legal=entry.sources.some(x=>approvedSources.has(x.source));
@@ -72,6 +85,7 @@ report.summary={
   newApplicationCandidates:report.deduplicatedReview.filter(x=>!x.inBaseline).length,
   dependencyRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('dependency')).length,
   genericSelectorRiskCandidates:report.deduplicatedReview.filter(x=>x.risk.includes('generic-selector')).length,
+  broadWithoutContextGuard:report.deduplicatedReview.filter(x=>x.risk.includes('broad-selector-without-context-guard')).length,
   cleanStaticCandidates:report.deduplicatedReview.filter(x=>!x.risk.length&&!x.alreadyInBaseline).length,
   publishableCandidates:report.deduplicatedReview.filter(x=>x.reviewStatus==='approved-for-staging').length
 };
