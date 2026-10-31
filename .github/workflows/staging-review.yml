@@ -7,6 +7,9 @@ on:
     paths:
       - 'scripts/prepare-staging.mjs'
       - 'scripts/build-overall-validation.mjs'
+      - 'src/release-readiness.js'
+      - 'test/release-readiness.test.js'
+      - 'config/device-test-evidence.json'
       - 'scripts/audit-candidate-licenses.mjs'
       - '.github/workflows/staging-review.yml'
       - 'config/candidate-sources.json'
