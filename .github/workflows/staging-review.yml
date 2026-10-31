@@ -6,6 +6,7 @@ on:
       - feature/multi-source-candidate-analysis
     paths:
       - 'scripts/prepare-staging.mjs'
+      - 'scripts/build-overall-validation.mjs'
       - 'scripts/audit-candidate-licenses.mjs'
       - '.github/workflows/staging-review.yml'
       - 'config/candidate-sources.json'
@@ -38,10 +39,15 @@ jobs:
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Validate preview subscription
         run: node tools/selector-validation/check-export.mjs --file reports/staging/gkd-preview.json5 --out reports/staging/validation.json
+      - name: Generate overall validation and publication gate
+        run: node scripts/build-overall-validation.mjs
       - name: Publish staging summary
         if: always()
         shell: bash
         run: |
+          if [ -f reports/staging/overall-validation.md ]; then
+            cat reports/staging/overall-validation.md >> "$GITHUB_STEP_SUMMARY"
+          fi
           if [ -f reports/staging/README.md ]; then
             cat reports/staging/README.md >> "$GITHUB_STEP_SUMMARY"
           fi
