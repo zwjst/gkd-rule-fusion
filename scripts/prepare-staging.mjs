@@ -10,6 +10,7 @@ const approvals=read('config/staging-approvals.json');
 if(approvals.schemaVersion!==1||!Array.isArray(approvals.approvedSources)||!Array.isArray(approvals.approvedGroups))throw Error('Invalid staging approvals');
 const sourceApprovals=new Map(approvals.approvedSources.filter(x=>x.reviewed===true&&x.redistributionApproved===true&&typeof x.evidenceUrl==='string'&&/^https:\/\//.test(x.evidenceUrl)&&/^[a-f0-9]{40}$/.test(x.commit??'')&&/^[a-f0-9]{64}$/.test(x.sha256??'')).map(x=>[x.id,x]));
 const approvedGroups=new Set(approvals.approvedGroups.filter(x=>x.reviewed===true&&x.runtimeTested===true&&typeof x.appId==='string'&&/^[a-f0-9]{64}$/.test(x.signature)).map(x=>x.appId+'|'+x.signature));
+const deviceTests=fs.existsSync('config/device-test-evidence.json')?read('config/device-test-evidence.json').tests??[]:[];
 const current=JSON5.parse(fs.readFileSync('dist/gkd.json5','utf8'));
 const known=new Map(current.apps.map(a=>[a.id,a]));
 const report={schemaVersion:2,baseline:{id:current.id,version:current.version,apps:current.apps.length},sources:[],reviewQueue:[],preview:{status:'baseline-only',containsUnapprovedRules:false}};
@@ -78,7 +79,8 @@ for(const item of report.reviewQueue){
 for(const entry of merged.values()){
   const legal=entry.sources.some(x=>{const approved=sourceApprovals.get(x.source);const actual=report.sources.find(s=>s.source===x.source);return approved&&actual?.status==='analyzed'&&approved.commit===actual.commit&&approved.sha256===actual.sha256;});
   const checked=approvedGroups.has(entry.appId+'|'+entry.signature);
-  entry.reviewStatus=entry.alreadyInBaseline?'already-published':entry.risk.length?'risk-review-required':!legal?'license-review-required':!checked?'runtime-review-required':'approved-for-staging';
+  const runtimeEvidence=deviceTests.some(t=>t.appId===entry.appId&&t.signature===entry.signature&&t.deviceId&&t.appVersion&&t.gkdVersion&&t.positivePass===true&&t.negativePass===true&&/^https:\/\//.test(t.evidenceUrl??'')&&entry.sources.some(s=>{const source=report.sources.find(r=>r.source===s.source);const approval=sourceApprovals.get(s.source);return source&&approval&&approval.commit===source.commit&&approval.sha256===source.sha256&&t.sourceCommit===source.commit&&t.sourceFileSha256===source.sha256;}));
+  entry.reviewStatus=entry.alreadyInBaseline?'already-published':entry.risk.length?'risk-review-required':!legal?'license-review-required':(!checked||!runtimeEvidence)?'runtime-review-required':'approved-for-staging';
   entry.publication=entry.reviewStatus==='approved-for-staging'?'staging-approved':'blocked';
 }
 report.deduplicatedReview=[...merged.values()].sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
