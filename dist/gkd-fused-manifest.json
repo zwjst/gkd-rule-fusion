@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "deviceTesting": "SKIPPED_UNVERIFIED",
+  "authorization": "USER_ATTESTED_NOT_INDEPENDENTLY_VERIFIED",
+  "baseVersion": 1,
+  "version": 2,
+  "sources": [
+    {
+      "id": "Lin-arm",
+      "repository": "Lin-arm/GKD_subscription",
+      "commit": "8d9823921bfb7dc7c7b0a61458c54438f12e540a",
+      "file": "dist/gkd.json5",
+      "sha256": "5c17ec55f422e94b4f8db8b28d14849f98ec93ea40928c4725e1d0d0e1e4f372",
+      "addedApps": 426,
+      "skippedExistingApps": 561,
+      "skippedRiskyApps": 10
+    },
+    {
+      "id": "Tsuk1ko",
+      "repository": "Tsuk1ko/gkd-subscription",
+      "commit": "cdfb6398cf6e9fe4709101453e773e33b93b163f",
+      "file": "dist/gkd.json5",
+      "sha256": "8cd433a3570f48dadf9dd074418613eb642b8b997c7d5e71f3414390a2530505",
+      "addedApps": 1,
+      "skippedExistingApps": 10,
+      "skippedRiskyApps": 0
+    },
+    {
+      "id": "Antiwall",
+      "repository": "Antiwall/gkd-subs",
+      "commit": "5fcb1c1c841323a0ea636176025f93b048271e2c",
+      "file": "dist/gkd_subs.json5",
+      "sha256": "90b8892c075871c88d32684d6fdda9a6544c31e95897339b5f8c67c5f362ec06",
+      "addedApps": 14,
+      "skippedExistingApps": 717,
+      "skippedRiskyApps": 0
+    },
+    {
+      "id": "AIsouler",
+      "repository": "AIsouler/GKD_subscription",
+      "commit": "b5160b47f4587c8a25ddad73eb012eae5942df7f",
+      "file": "dist/AIsouler_gkd.json5",
+      "sha256": "7c7d922f5730fd24340d9f59361fc6efe31955af4c887ef8c21e320b9bd59ac1",
+      "addedApps": 3,
+      "skippedExistingApps": 881,
+      "skippedRiskyApps": 2
+    },
+    {
+      "id": "lyc452",
+      "repository": "lyc452/GKD_Subscription",
+      "commit": "87d5248d799e59bd21f27ff8deada39ef2afa3b4",
+      "file": "dist/gkd.json5",
+      "sha256": "5100d1157e106bc4e55f38fec322e34c714afa9db2998511fb033883675458c1",
+      "addedApps": 27,
+      "skippedExistingApps": 625,
+      "skippedRiskyApps": 0
+    },
+    {
+      "id": "Adpro-Team",
+      "repository": "Adpro-Team/GKD_subscription",
+      "commit": "787a8f72903e22c5eecdf8b983340d96fd71bb87",
+      "file": "dist/Adpro_gkd.json5",
+      "sha256": "ba50c26921501da877f5fb9bea7fc250fd7b177937a8e4dc073ab6badb6b088d",
+      "addedApps": 15,
+      "skippedExistingApps": 663,
+      "skippedRiskyApps": 0
+    }
+  ],
+  "addedApps": 486,
+  "addedGroups": 782,
+  "skippedExistingApps": 3457,
+  "skippedRiskyApps": 12
+}
