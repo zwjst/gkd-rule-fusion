@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "configHash": "d0ebb20dcbd8d5ccf5492a047c953179229b5f8c3dee63fdddfc28279e42fd05",
+  "sources": {
+    "aoguai": {
+      "repository": "aoguai/subscription",
+      "commit": "e0ad57290fed632e7305f67f92fcca8e775fb825",
+      "committedAt": "2026-09-26T08:58:38Z",
+      "files": {
+        "dist/aoguai_gkd.json5": "f6151dd60c671d3bd77505f62f9abd5d6694388e89277f5a5374d035cb8c5a4e",
+        "LICENSE": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+        "LEGAL.md": "7510f72c5738f65f840e29367ed7792de45b19da41b11158b2112f59e2a86010",
+        "README.md": "2d7994c5070adc3bc5d0296530063ea9393a7a0adb89db29801f3522ec449ba8"
+      }
+    },
+    "ganlinte": {
+      "repository": "ganlinte/GKD-subscription",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "committedAt": "2026-09-24T07:52:01Z",
+      "files": {
+        "dist/ganlin_gkd.json5": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23",
+        "LICENSE": "3771ee111d68071b0e2994817cff88599d59d7272e75ea026f87af810160340e",
+        "README.md": "2e252f302e12aafa2d885cbf3ecf25691db316911d462861f33a1dd755c734ba"
+      }
+    },
+    "Lin-arm": {
+      "repository": "Lin-arm/GKD_subscription",
+      "commit": "ec30889b27a22c0a8b7afc4e43e4e196e064fee9",
+      "committedAt": "2026-10-31T09:42:34+08:00",
+      "files": {
+        "dist/gkd.json5": "5c17ec55f422e94b4f8db8b28d14849f98ec93ea40928c4725e1d0d0e1e4f372",
+        "README.md": "51455da8193b381fef1d6c8120f73e095dadbf98cdc35d04b3b1c7170655dfd6"
+      }
+    },
+    "yanmuq": {
+      "repository": "yanmuq/muqi_gkd",
+      "commit": "8e166bb5662ace70bf09ddfb78fe0b40cf689b6f",
+      "committedAt": "2026-10-29T21:30:17+08:00",
+      "files": {
+        "dist/gkd.json5": "eda99edc227da8e117edebe9f61f56a3764f2f2de84b37ac834c054bfb2098dd",
+        "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+        "README.md": "faaf1347f57b14821302ea2e3ff8b0be8c88735cecdfff1d6862dd70941135c4"
+      }
+    }
+  }
+}

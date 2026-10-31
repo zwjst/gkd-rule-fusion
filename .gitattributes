@@ -1,0 +1,2 @@
+# Preserve CSV bytes (UTF-8 BOM + CRLF) so public SHA-256 values remain valid.
+*.csv -text whitespace=cr-at-eol

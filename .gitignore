@@ -147,3 +147,17 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Reproducible local audit outputs and Git input cache
+reports/latest/
+reports/*/audit.json
+reports/*/fusion-plan.json
+reports/*/catalog.json
+reports/*/catalog.html
+reports/*/apps.csv
+reports/*/rule-groups.csv
+reports/*/files.sha256
+
+# Local cloud setup proposals, not project publication artifacts
+/docs/environment-config.proposed.json
+/docs/ENVIRONMENT_SETUP.md

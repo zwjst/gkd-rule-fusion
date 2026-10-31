@@ -1,0 +1,39 @@
+name: Locked source audit
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 19 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: audit-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            tools/selector-validation/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: npm --prefix tools/selector-validation ci --ignore-scripts --no-audit --no-fund
+      - run: npm --prefix tools/selector-validation test
+      - run: npm run sync
+      - run: npm run catalog
+      - run: node tools/selector-validation/check.mjs --out reports/latest/selector-validation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: locked-source-audit
+          path: reports/latest/
+          if-no-files-found: error
+  # Phase 1 intentionally uploads reports only. No subscription Release/Pages publication.

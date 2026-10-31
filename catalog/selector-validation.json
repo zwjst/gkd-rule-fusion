@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "inputFingerprint": "1eaf1819090f6eb36d6a0b592d5f8570ccbd1c183c4e5f8ba0312672d5dbd4c6",
+  "scope": "Official selector syntax + context type checking, including anyMatches and group-level inherited selectors; not Android behavior or complete subscription schema validation.",
+  "toolchain": {
+    "tool": "gkd-rule-fusion-selector-validation",
+    "version": "0.1.0",
+    "node": "v24.19.0",
+    "selector": "0.5.22",
+    "wasm_matches": "0.0.1",
+    "json5": "2.2.3",
+    "referenceImplementation": "@gkd-kit/tools@0.8.0 parseSelector initialization",
+    "wasmSha256": "e95194602b13e241e7bfd976a85644594196bed5c537efa5d15c0ac32eed8d83",
+    "packageLockSha256": "88704b222d5e69f509a3072a37fc9653fa721bc58ad0e8c085417a9191143b6d"
+  },
+  "controls": {
+    "valid": {
+      "expected": "pass",
+      "actual": "pass",
+      "ok": true
+    },
+    "syntax": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    },
+    "invalidRegex": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    },
+    "invalidType": {
+      "expected": "reject",
+      "actual": "reject",
+      "ok": true
+    }
+  },
+  "wasmRegexCompilerInitialized": true,
+  "controlRegexCompilerCalls": 1,
+  "regexCompilerCalls": 464,
+  "uniqueRegexExpressionCount": 464,
+  "sources": [
+    {
+      "source": "aoguai",
+      "commit": "e0ad57290fed632e7305f67f92fcca8e775fb825",
+      "sha256": "f6151dd60c671d3bd77505f62f9abd5d6694388e89277f5a5374d035cb8c5a4e",
+      "definitionReferences": 881,
+      "effectiveRuleReferences": 881,
+      "inheritedEffectiveReferences": 0,
+      "uniqueSelectors": 801,
+      "passedUniqueSelectors": 801,
+      "failedUniqueSelectors": 0,
+      "failedDefinitionReferences": 0,
+      "failedEffectiveRuleReferences": 0,
+      "byField": {
+        "matches": {
+          "definitionReferences": 767,
+          "uniqueSelectors": 708
+        },
+        "anyMatches": {
+          "definitionReferences": 78,
+          "uniqueSelectors": 78
+        },
+        "excludeMatches": {
+          "definitionReferences": 36,
+          "uniqueSelectors": 24
+        }
+      }
+    },
+    {
+      "source": "ganlinte",
+      "commit": "4746d192b4c57a4b62ed92a7f5deaf79e64fa811",
+      "sha256": "5624137f8c70566a8dc985990dd18571600efa1c76129734703533ca5ee71c23",
+      "definitionReferences": 2121,
+      "effectiveRuleReferences": 2121,
+      "inheritedEffectiveReferences": 0,
+      "uniqueSelectors": 2008,
+      "passedUniqueSelectors": 2008,
+      "failedUniqueSelectors": 0,
+      "failedDefinitionReferences": 0,
+      "failedEffectiveRuleReferences": 0,
+      "byField": {
+        "matches": {
+          "definitionReferences": 2063,
+          "uniqueSelectors": 1956
+        },
+        "anyMatches": {
+          "definitionReferences": 45,
+          "uniqueSelectors": 45
+        },
+        "excludeMatches": {
+          "definitionReferences": 13,
+          "uniqueSelectors": 12
+        }
+      }
+    },
+    {
+      "source": "Lin-arm",
+      "commit": "ec30889b27a22c0a8b7afc4e43e4e196e064fee9",
+      "sha256": "5c17ec55f422e94b4f8db8b28d14849f98ec93ea40928c4725e1d0d0e1e4f372",
+      "definitionReferences": 4384,
+      "effectiveRuleReferences": 4384,
+      "inheritedEffectiveReferences": 0,
+      "uniqueSelectors": 3644,
+      "passedUniqueSelectors": 3644,
+      "failedUniqueSelectors": 0,
+      "failedDefinitionReferences": 0,
+      "failedEffectiveRuleReferences": 0,
+      "byField": {
+        "matches": {
+          "definitionReferences": 4166,
+          "uniqueSelectors": 3504
+        },
+        "anyMatches": {
+          "definitionReferences": 151,
+          "uniqueSelectors": 108
+        },
+        "excludeMatches": {
+          "definitionReferences": 67,
+          "uniqueSelectors": 64
+        }
+      }
+    },
+    {
+      "source": "yanmuq",
+      "commit": "8e166bb5662ace70bf09ddfb78fe0b40cf689b6f",
+      "sha256": "eda99edc227da8e117edebe9f61f56a3764f2f2de84b37ac834c054bfb2098dd",
+      "definitionReferences": 191,
+      "effectiveRuleReferences": 191,
+      "inheritedEffectiveReferences": 0,
+      "uniqueSelectors": 184,
+      "passedUniqueSelectors": 184,
+      "failedUniqueSelectors": 0,
+      "failedDefinitionReferences": 0,
+      "failedEffectiveRuleReferences": 0,
+      "byField": {
+        "matches": {
+          "definitionReferences": 186,
+          "uniqueSelectors": 180
+        },
+        "anyMatches": {
+          "definitionReferences": 4,
+          "uniqueSelectors": 4
+        },
+        "excludeMatches": {
+          "definitionReferences": 1,
+          "uniqueSelectors": 1
+        }
+      }
+    }
+  ],
+  "total": {
+    "definitionReferences": 7577,
+    "effectiveRuleReferences": 7577,
+    "uniqueSelectorsAcrossSources": 5634,
+    "passedUniqueSelectorsAcrossSources": 5634,
+    "failedUniqueSelectorsAcrossSources": 0
+  },
+  "failures": [],
+  "notes": [
+    "Execution uses official selector and WASM packages through the same parse/checkType initialization pattern as @gkd-kit/tools@0.8.0; neither tools nor the type-only api package is required.",
+    "Official tools checkSubscription@0.8.0 skips anyMatches; this audit explicitly checks matches/anyMatches/excludeMatches.",
+    "Official WASM regex compiler invocations are instrumented; control invocations are tracked separately.",
+    "No selector bodies are written into this result. Definition references count physical declarations; effective references include per-rule inheritance.",
+    "A syntax/type pass does not establish rule matching, click safety, performance, snapshot success or Android-version compatibility."
+  ]
+}
