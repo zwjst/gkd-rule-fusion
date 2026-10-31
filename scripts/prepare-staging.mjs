@@ -92,9 +92,16 @@ report.summary={
 report.reviewQueue.sort((a,b)=>Number(a.risk.length>0)-Number(b.risk.length>0)||Number(a.inBaseline)-Number(b.inBaseline)||a.appId.localeCompare(b.appId));
 fs.mkdirSync('reports/staging',{recursive:true});
 // A focused manual-review queue: licensing first, then runtime checks; never publish automatically.
+const candidateSourceLookup=new Map(sources.map(s=>[s.id,s]));
+const upstreamLinks=(sourceIds,appId)=>sourceIds.map(id=>{
+ const source=candidateSourceLookup.get(id);
+ if(!source)return {source:id,url:null};
+ const file=source.file.split('/').map(encodeURIComponent).join('/');
+ return {source:id,url:'https://github.com/'+source.repository+'/blob/'+encodeURIComponent(source.ref)+'/'+file,appId};
+});
 const reviewPriority=report.deduplicatedReview.filter(x=>!x.alreadyInBaseline).map(x=>({
   appId:x.appId,appName:x.appName,signature:x.signature,
-  sources:x.sources.map(s=>s.source),groupNames:[...new Set(x.sources.map(s=>s.groupName))],
+  sources:x.sources.map(s=>s.source),upstream:upstreamLinks(x.sources.map(s=>s.source),x.appId),groupNames:[...new Set(x.sources.map(s=>s.groupName))],
   reviewStatus:x.reviewStatus,risk:x.risk,dependencyFindings:x.issues,selectorReview:x.selectorReview,
   priority:x.risk.includes('dependency')?'P0-dependency':
     x.risk.includes('broad-selector-without-context-guard')?'P1-unguarded-broad-selector':
@@ -106,7 +113,7 @@ fs.writeFileSync('reports/staging/manual-review-queue.json',JSON.stringify(revie
 const reviewMd=['# Manual review priorities','','All entries remain blocked until license evidence and device testing are approved.','','| Priority | Count |','|---|---:|'];
 for(const p of [...new Set(reviewPriority.map(x=>x.priority))])reviewMd.push('| '+p+' | '+reviewPriority.filter(x=>x.priority===p).length+' |');
 reviewMd.push('','## First 30 candidates','','| Priority | Application | Group | Sources | Risks |','|---|---|---|---|---|');
-for(const x of reviewPriority.slice(0,30))reviewMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,70),x.sources.join(', '),x.risk.join(', ')||'none'].join(' | ')+' |');
+for(const x of reviewPriority.slice(0,30))reviewMd.push('| '+[x.priority,x.appId,x.groupNames.join(', ').replaceAll('|','/').slice(0,70),x.upstream.map(u=>u.url?'['+u.source+']('+u.url+')':u.source).join(', '),x.risk.join(', ')||'none'].join(' | ')+' |');
 fs.writeFileSync('reports/staging/manual-review-queue.md',reviewMd.join('\n')+'\n');
 const urgent=reviewPriority.filter(x=>x.priority.startsWith('P0-')||x.priority.startsWith('P1-'));
 fs.writeFileSync('reports/staging/urgent-review.json',JSON.stringify(urgent,null,2)+'\n');
