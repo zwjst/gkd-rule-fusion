@@ -1,0 +1,37 @@
+name: Staging candidate review
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/multi-source-candidate-analysis
+    paths:
+      - 'scripts/prepare-staging.mjs'
+      - '.github/workflows/staging-review.yml'
+      - 'config/candidate-sources.json'
+  pull_request:
+    paths:
+      - 'scripts/prepare-staging.mjs'
+      - '.github/workflows/staging-review.yml'
+permissions:
+  contents: read
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: node scripts/prepare-staging.mjs
+      - name: Validate preview subscription
+        run: node tools/selector-validation/check-export.mjs --file reports/staging/gkd-preview.json5 --out reports/staging/validation.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: staging-review-and-preview
+          path: reports/staging/
+          if-no-files-found: ignore
