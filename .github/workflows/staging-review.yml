@@ -5,11 +5,15 @@ on:
     branches:
       - feature/multi-source-candidate-analysis
     paths:
-      - 'scripts/prepare-staging.mjs'\n      - 'scripts/audit-candidate-licenses.mjs'
+      - 'scripts/prepare-staging.mjs'
+      - 'scripts/audit-candidate-licenses.mjs'
       - '.github/workflows/staging-review.yml'
       - 'config/candidate-sources.json'
+      - 'config/staging-approvals.json'
   pull_request:
     paths:
+      - 'scripts/audit-candidate-licenses.mjs'
+      - 'config/staging-approvals.json'
       - 'scripts/prepare-staging.mjs'
       - '.github/workflows/staging-review.yml'
 permissions:
