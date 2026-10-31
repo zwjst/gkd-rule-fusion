@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: feature/multi-source-candidate-analysis
           persist-credentials: true
       - uses: actions/setup-node@v4
         with:
@@ -36,6 +37,8 @@ jobs:
           git add dist/gkd-fused.json5 dist/gkd-fused-manifest.json dist/gkd-fused-validation.json
           if ! git diff --cached --quiet; then
             git commit -m "build: publish validated owner-authorized fusion candidate"
+            git fetch origin feature/multi-source-candidate-analysis
+            git rebase origin/feature/multi-source-candidate-analysis
             git push origin HEAD:feature/multi-source-candidate-analysis
           fi
       - uses: actions/upload-artifact@v4
