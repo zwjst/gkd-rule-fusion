@@ -5,7 +5,7 @@ on:
     branches:
       - feature/multi-source-candidate-analysis
     paths:
-      - 'scripts/prepare-staging.mjs'
+      - 'scripts/prepare-staging.mjs'\n      - 'scripts/audit-candidate-licenses.mjs'
       - '.github/workflows/staging-review.yml'
       - 'config/candidate-sources.json'
   pull_request:
@@ -27,6 +27,8 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm test
       - run: node scripts/prepare-staging.mjs
+      - name: Collect upstream license evidence
+        run: node scripts/audit-candidate-licenses.mjs
       - name: Install isolated selector validator dependencies
         working-directory: tools/selector-validation
         run: npm ci --ignore-scripts --no-audit --no-fund
