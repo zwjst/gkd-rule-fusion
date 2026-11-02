@@ -51,7 +51,7 @@ if(!log.addedApps)throw Error('No safely addable new apps; refusing to publish u
 fs.mkdirSync('dist',{recursive:true});
 const output=JSON.stringify(result,null,2)+'\n';
 const groups=result.apps.reduce((n,app)=>n+app.groups.length,0);
-const rules=[...result.globalGroups,...result.apps.flatMap(app=>app.groups)].reduce((n,group)=>n+(Array.isArray(group.rules)?group.rules.length:0),0);
+const rules=[...result.globalGroups,...result.apps.flatMap(app=>app.groups)].reduce((n,group)=>n+(Array.isArray(group.rules)?group.rules.length:group.rules==null?0:1),0);
 log.id=result.id;
 log.subscriptionUrl='https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.json5';
 log.versionUrl='https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.version.json';
