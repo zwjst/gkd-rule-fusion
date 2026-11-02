@@ -18,7 +18,7 @@ if(!Array.isArray(subscription.apps)||!subscription.apps.length)fail('Missing ap
 if(!Array.isArray(subscription.globalGroups))fail('Missing globalGroups');
 const appGroups=subscription.apps.reduce((n,app)=>{if(typeof app.id!=='string'||!Array.isArray(app.groups))fail('Malformed app');return n+app.groups.length},0);
 const groups=appGroups+subscription.globalGroups.length;
-const rules=[...subscription.globalGroups,...subscription.apps.flatMap(a=>a.groups)].reduce((n,g)=>n+(Array.isArray(g.rules)?g.rules.length:0),0);
+const rules=[...subscription.globalGroups,...subscription.apps.flatMap(a=>a.groups)].reduce((n,g)=>n+(Array.isArray(g.rules)?g.rules.length:(g.rules==null?0:1)),0);
 const sha256=crypto.createHash('sha256').update(bytes).digest('hex');
 if(sha256!==manifest.subscriptionSha256)fail('Fusion manifest SHA-256 mismatch');
 for(const [field,actual] of Object.entries({apps:subscription.apps.length,appGroups,globalGroups:subscription.globalGroups.length,groups,rules}))if(manifest.counts?.[field]!==actual)fail('Fusion manifest count mismatch: '+field);
