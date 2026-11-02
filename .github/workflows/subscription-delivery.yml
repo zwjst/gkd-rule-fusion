@@ -3,13 +3,21 @@ on:
   push:
     branches: [main]
     paths:
-      - 'dist/**'
+      - 'dist/gkd-fused.json5'
+      - 'dist/gkd-fused.version.json'
+      - 'dist/gkd-fused-manifest.json'
+      - 'dist/gkd-fused-validation.json'
+      - 'scripts/build-user-authorized-fusion.mjs'
       - 'scripts/check-subscription.mjs'
       - 'scripts/check-public-subscription.mjs'
       - '.github/workflows/subscription-delivery.yml'
   pull_request:
     paths:
-      - 'dist/**'
+      - 'dist/gkd-fused.json5'
+      - 'dist/gkd-fused.version.json'
+      - 'dist/gkd-fused-manifest.json'
+      - 'dist/gkd-fused-validation.json'
+      - 'scripts/build-user-authorized-fusion.mjs'
       - 'scripts/check-subscription.mjs'
       - 'scripts/check-public-subscription.mjs'
       - '.github/workflows/subscription-delivery.yml'
@@ -28,7 +36,13 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
       - run: node scripts/check-subscription.mjs
-      - name: Check public Raw URL (main only)
+      - name: Install isolated selector validator
+        working-directory: tools/selector-validation
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate published fusion selectors
+        run: node tools/selector-validation/check-export.mjs --file dist/gkd-fused.json5 --out dist/gkd-fused-validation.json
+      - name: Check public fusion Raw URL and version file (main only)
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         run: node scripts/check-public-subscription.mjs
