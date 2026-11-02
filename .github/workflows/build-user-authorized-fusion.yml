@@ -1,6 +1,14 @@
 name: Build user-authorized fusion subscription
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-user-authorized-fusion.mjs'
+      - 'tools/selector-validation/**'
+      - 'config/candidate-sources.json'
+      - 'config/release-policy.json'
+      - '.github/workflows/build-user-authorized-fusion.yml'
   pull_request:
     paths:
       - 'scripts/build-user-authorized-fusion.mjs'
@@ -12,11 +20,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/multi-source-candidate-analysis
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           persist-credentials: true
       - uses: actions/setup-node@v4
         with:
@@ -28,25 +36,31 @@ jobs:
       - name: Install selector validator
         working-directory: tools/selector-validation
         run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Validate new fused subscription
+      - name: Validate generated fusion subscription
         run: node tools/selector-validation/check-export.mjs --file dist/gkd-fused.json5 --out dist/gkd-fused-validation.json
-      - name: Publish fusion files on PR branch
+      - name: Verify subscription, manifest and version descriptor
+        run: node scripts/check-subscription.mjs
+      - name: Publish generated files on source branch
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist/gkd-fused.json5 dist/gkd-fused-manifest.json dist/gkd-fused-validation.json
+          git add dist/gkd-fused.json5 dist/gkd-fused.version.json dist/gkd-fused-manifest.json dist/gkd-fused-validation.json
           if ! git diff --cached --quiet; then
-            git commit -m "build: publish validated owner-authorized fusion candidate"
-            git fetch origin feature/multi-source-candidate-analysis
-            git rebase origin/feature/multi-source-candidate-analysis
-            git push origin HEAD:feature/multi-source-candidate-analysis
+            git commit -m "build: publish validated six-source fusion subscription"
+            git fetch origin "$TARGET_BRANCH"
+            git rebase "origin/$TARGET_BRANCH"
+            git push origin "HEAD:$TARGET_BRANCH"
           fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: owner-authorized-fusion
+          name: six-source-fusion-release
           path: |
             dist/gkd-fused.json5
+            dist/gkd-fused.version.json
             dist/gkd-fused-manifest.json
             dist/gkd-fused-validation.json
           if-no-files-found: ignore
