@@ -76,6 +76,6 @@ node tools/selector-validation/check-export.mjs --file dist/gkd-fused.json5 --ou
 node scripts/check-subscription.mjs
 ```
 
-构建脚本读取六个候选来源的当前提交，因此每次构建都会重新固定来源 SHA；构建结果必须经静态校验和人工审核。内容改变时保持订阅 ID 不变、递增整数版本，并同步更新正文、版本文件、manifest 与验证报告。发布检查工作流会检查正文/版本文件的 ID、版本、数量、SHA-256，并对比 GitHub Raw 公网实际返回内容。
+六个候选来源已在 `config/candidate-sources.json` 中固定到审核过的 40 位 commit SHA；构建不会跟随浮动分支。更换来源提交前必须重新审查差异与许可，并更新固定 SHA。内容改变时保持订阅 ID 不变、递增整数版本，并同步更新正文、版本文件、manifest 与验证报告。发布检查工作流会检查正文/版本文件的 ID、版本、数量、SHA-256，并对比 GitHub Raw 公网实际返回内容。
 
 四源调查目录与旧基线资料仍保留在仓库中，但不能把调查目录条目数量当作当前融合订阅数量。
