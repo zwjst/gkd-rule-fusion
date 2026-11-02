@@ -14,6 +14,7 @@ const baseline=JSON5.parse(fs.readFileSync('dist/gkd.json5','utf8'));
 const result=structuredClone(baseline);
 result.version=Number(baseline.version)+1;
 if(!Number.isSafeInteger(result.version))throw Error('Invalid baseline version');
+result.checkUpdateUrl='./gkd-fused.version.json';
 const seen=new Set(result.apps.map(a=>a.id));
 const log={schemaVersion:1,deviceTesting:'SKIPPED_UNVERIFIED',authorization:'USER_ATTESTED_NOT_INDEPENDENTLY_VERIFIED',baseVersion:baseline.version,version:result.version,sources:[],addedApps:0,addedGroups:0,skippedExistingApps:0,skippedRiskyApps:0};
 const broad=/(@TextView|@ImageView|\\btext\\s*==\\s*['"]?[xX×✕关闭]|text\\s*\\*=\\s*['"]?[xX×]|clickable\\s*==\\s*true)/i;
@@ -48,6 +49,15 @@ for(const source of sources){
 }
 if(!log.addedApps)throw Error('No safely addable new apps; refusing to publish unchanged fusion');
 fs.mkdirSync('dist',{recursive:true});
-fs.writeFileSync('dist/gkd-fused.json5',JSON.stringify(result,null,2)+'\n');
+const output=JSON.stringify(result,null,2)+'\n';
+const groups=result.apps.reduce((n,app)=>n+app.groups.length,0);
+const rules=[...result.globalGroups,...result.apps.flatMap(app=>app.groups)].reduce((n,group)=>n+(Array.isArray(group.rules)?group.rules.length:0),0);
+log.id=result.id;
+log.subscriptionUrl='https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.json5';
+log.versionUrl='https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.version.json';
+log.counts={apps:result.apps.length,appGroups:groups,globalGroups:result.globalGroups.length,groups:groups+result.globalGroups.length,rules};
+log.subscriptionSha256=sha(output);
+fs.writeFileSync('dist/gkd-fused.json5',output);
+fs.writeFileSync('dist/gkd-fused.version.json',JSON.stringify({id:result.id,version:result.version},null,2)+'\n');
 fs.writeFileSync('dist/gkd-fused-manifest.json',JSON.stringify(log,null,2)+'\n');
-console.log('Fusion created:',JSON.stringify({apps:result.apps.length,addedApps:log.addedApps,addedGroups:log.addedGroups,version:result.version,deviceTesting:log.deviceTesting}));
+console.log('Fusion created:',JSON.stringify({id:result.id,apps:result.apps.length,appGroups:groups,globalGroups:result.globalGroups.length,rules,addedApps:log.addedApps,addedGroups:log.addedGroups,version:result.version,subscriptionSha256:log.subscriptionSha256,deviceTesting:log.deviceTesting}));
