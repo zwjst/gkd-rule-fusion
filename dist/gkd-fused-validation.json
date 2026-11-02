@@ -11,22 +11,22 @@
     "url": "https://github.com/gkd-kit/gkd/blob/be5eb76caabbec5cca1ec45569773b2b5f742ef7/gkd-app/src/commonMain/kotlin/li/gkd/app/rule/ResolvedRule.kt#L111"
   },
   "counts": {
-    "apps": 1102,
+    "apps": 1100,
     "categories": 12,
-    "appGroups": 2114,
+    "appGroups": 2110,
     "globalGroups": 9,
-    "rules": 3232,
-    "selectorReferences": 3625,
-    "uniqueSelectors": 3242,
-    "passedUniqueSelectors": 3242,
+    "rules": 3228,
+    "selectorReferences": 3621,
+    "uniqueSelectors": 3238,
+    "passedUniqueSelectors": 3238,
     "failedUniqueSelectors": 0,
     "scopeReferences": 2,
     "preKeyReferences": 346,
     "sharedCooldownReferences": 63,
     "sharedMaximumReferences": 87,
     "versionPatternReferences": 0,
-    "positionObjects": 25,
-    "swipeArguments": 3
+    "positionObjects": 23,
+    "swipeArguments": 2
   },
   "controls": {
     "valid": {
@@ -59,7 +59,7 @@
   ],
   "input": {
     "file": "gkd-fused.json5",
-    "sha256": "7760bbf7bb2e767df2d29f85079f2cd5ded62c2f0bdf040de038a4e87d463c99"
+    "sha256": "a5c9e05b35e4980937df7fa2d3c24277d4f85e88dac7706891ecc0c9a5d5e547"
   },
   "controlRegexCompilerCalls": 1,
   "toolchain": {

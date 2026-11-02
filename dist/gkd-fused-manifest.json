@@ -8,10 +8,10 @@
     {
       "id": "Lin-arm",
       "repository": "Lin-arm/GKD_subscription",
-      "commit": "41f3a9bc7ca8494eeb7a9b322522508eff970129",
+      "commit": "8d9823921bfb7dc7c7b0a61458c54438f12e540a",
       "file": "dist/gkd.json5",
-      "sha256": "27c1edb6c8fb5a37beadf9ff02d26ed4fa0ca0650f1f7e3199d3b9819c27d2e4",
-      "addedApps": 428,
+      "sha256": "5c17ec55f422e94b4f8db8b28d14849f98ec93ea40928c4725e1d0d0e1e4f372",
+      "addedApps": 426,
       "skippedExistingApps": 561,
       "skippedRiskyApps": 10
     },
@@ -66,19 +66,19 @@
       "skippedRiskyApps": 0
     }
   ],
-  "addedApps": 488,
-  "addedGroups": 786,
+  "addedApps": 486,
+  "addedGroups": 782,
   "skippedExistingApps": 3457,
   "skippedRiskyApps": 12,
   "id": 20261031,
   "subscriptionUrl": "https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.json5",
   "versionUrl": "https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.version.json",
   "counts": {
-    "apps": 1102,
-    "appGroups": 2114,
+    "apps": 1100,
+    "appGroups": 2110,
     "globalGroups": 9,
-    "groups": 2123,
-    "rules": 3199
+    "groups": 2119,
+    "rules": 3195
   },
-  "subscriptionSha256": "7760bbf7bb2e767df2d29f85079f2cd5ded62c2f0bdf040de038a4e87d463c99"
+  "subscriptionSha256": "a5c9e05b35e4980937df7fa2d3c24277d4f85e88dac7706891ecc0c9a5d5e547"
 }
