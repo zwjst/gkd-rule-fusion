@@ -1,50 +1,49 @@
-# 融合实验版产物
+# 当前发布产物
 
-项目 v0.2.0；订阅 **ID 20261031、版本 1、experimental**；派生产物许可 **GPL-3.0-only**。
+当前唯一推荐导入的是六源融合实验版。项目 v0.2.0；订阅 **ID 20261031、版本 2、experimental**；设备测试状态为 **SKIPPED_UNVERIFIED**。
 
-## 导入地址
+## 唯一导入地址
 
 ```text
-https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd.json5
+https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.json5
 ```
 
-在 GKD“订阅”页点 **+**，粘贴此地址。不要导入 `gkd.version.json`、manifest、来源 JSON 或软件目录。完整步骤见 [订阅说明](../docs/SUBSCRIPTIONS.md)。
+版本检查地址：
 
-## 当前范围
+```text
+https://raw.githubusercontent.com/zwjst/gkd-rule-fusion/main/dist/gkd-fused.version.json
+```
 
-- 614 App：奥怪 72、甘霖补充 542；共享 App 选择奥怪整套应用规则。
-- 1,328 应用规则组、9 个奥怪全局组，共 1,337 组、2,159 条规则记录。
-- 已整体隔离 3 个上游问题组，未通过改写 key 或删除前置条件修补。
-- Lin-arm 与木七未进入本实验版，仍可在四源调查目录对照。
+在 GKD 订阅页编辑现有订阅，将地址替换为上述正文地址。确认 ID 为 20261031、版本为 2、App 数为 1,100。正文内的 `checkUpdateUrl` 使用相对路径 `./gkd-fused.version.json`，与正文同目录。
 
-初始类别默认值已解析为各组显式 enable；不代表你的设备已启用或页面操作已验证。加入补充 App 后，奥怪全局组按应用组名称进行的屏蔽可能发生变化，详见 [策略与交互](../docs/SUBSCRIPTIONS.md#初始开关与全局交互)。
+## 当前内容
 
-## 文件
+| 指标 | 数量 |
+|---|---:|
+| App | 1,100 |
+| 应用规则组 | 2,110 |
+| 全局规则组 | 9 |
+| 规则组总数 | 2,119 |
+| 规则记录 | 3,228 |
+| 六源新增 App | 486 |
+| 六源新增应用规则组 | 782 |
+
+六源来源及跳过统计见 [gkd-fused-manifest.json](gkd-fused-manifest.json)，静态检查见 [gkd-fused-validation.json](gkd-fused-validation.json)。
+
+## 文件说明
 
 | 文件 | 用途 |
-| --- | --- |
-| [gkd.json5](gkd.json5) | 实际 GKD 订阅正文，采用合法 JSON 文本（也是 JSON5 子集） |
-| [gkd.version.json](gkd.version.json) | 相同 id/version 的轻量更新描述，不包含规则 |
-| [manifest.json](manifest.json) | 项目/订阅版本、范围、来源归档和文件摘要 |
-| [apps.csv](apps.csv) | 实际订阅中的 614 个 App |
-| [rule-groups.csv](rule-groups.csv) | 实际订阅中的 1,337 个规则组 |
-| [provenance.json](provenance.json) | 逐组、逐规则上游身份与导出变更 |
-| [quarantine.json](quarantine.json) | 未导出的问题组和原因 |
-| [validation.json](validation.json) | 本次成品检查结果、工具链及未验证范围 |
-| [files.sha256](files.sha256) | 文件 SHA-256 校验表 |
-| [LICENSE](LICENSE) | GPL-3.0-only 许可文本；第三方原始许可另保留 |
-| [NOTICE.md](NOTICE.md) | 修改日期、署名、来源归档和摘要说明 |
+|---|---|
+| [gkd-fused.json5](gkd-fused.json5) | 当前唯一推荐导入的订阅正文 |
+| [gkd-fused.version.json](gkd-fused.version.json) | 当前正文的更新检查文件，ID/version 必须一致 |
+| [gkd-fused-manifest.json](gkd-fused-manifest.json) | 当前正文 SHA-256、数量、版本和六源来源信息 |
+| [gkd-fused-validation.json](gkd-fused-validation.json) | 当前正文静态验证报告 |
+| [gkd.json5](gkd.json5) | 旧 614 App 基线，仅供构建和对照，不要作为当前订阅导入 |
+| [gkd.version.json](gkd.version.json) | 旧基线版本文件，不用于六源融合版 |
+| [manifest.json](manifest.json) | 旧基线 manifest，不用于六源融合版 |
 
-2,253 个不同选择器全部通过官方语法/类型及静态正则检查；基础结构和显式引用完整性检查 0 错误、0 警告。未完成 Android 客户端导入/实际执行、坐标表达式完整编译、正负快照与设备回归、耗电和性能验证。实验版没有被标为设备验证通过。
+## 验证范围与限制
 
-## 复现与更新
+当前静态报告显示 3,238 个不同选择器通过语法、类型及静态正则检查，0 错误、0 警告。但 Android 客户端导入、设备实际执行、正负快照回归、坐标表达式完整语法、误触和耗电性能尚未验证。不要将静态验证通过描述为实机验证通过。
 
-先按根目录 [开发命令](../README.md#开发与复现) 安装主依赖、独立校验工具依赖并取得锁定输入，然后运行：
-
-```sh
-npm run build:fusion
-```
-
-导出使用 [config/fusion.json](../config/fusion.json) 审核过的提交及来源/key 状态；原始输入绑定 [sources.lock.json](../sources.lock.json)。构建不自动拉取上游新版本，也不自动上传。内容改变须保持订阅 ID、递增整数 version；不可通过原地改字节复用同一版本。
-
-对应源码、原始声明与许可见 [third_party](../third_party/README.md)。四源调查包含 1,053 个包名条目，范围大于本成品；不能以调查目录推断实际订阅支持范围。
+更新说明见 [订阅发布说明](../docs/SUBSCRIPTIONS.md)。
